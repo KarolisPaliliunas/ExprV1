@@ -7,7 +7,7 @@
                         {{ __("Groups") }}
                     </div>
                     <div class="p-6 text-gray-900 mb-4 col-sm-3">
-                        <a class="btn btn-success" href="#">{{ __('Create new group') }}</a>
+                        <a class="btn btn-success" href="{{ route('ugroups.create') }}">{{ __('Create new group') }}</a>
                     </div>
                 </div>
                 <table class="table align-middle mb-0 bg-white">
@@ -24,12 +24,6 @@
                     <tr>
                       <td>
                         <div class="d-flex align-items-center">
-                          <img
-                              src="{{asset('assets/images/default-project-picture.jpg')}}"
-                              alt="project-image"
-                              style="width: 45px; height: 45px"
-                              class="rounded-circle"
-                              />
                           <div class="ms-3">
                             <p class="fw-bold mb-1">{{ $userGroup->name }}</p>
                             <p class="text-muted mb-0">{{__("User group")}}</p>
@@ -43,10 +37,10 @@
                         <p class="fw-normal mb-1">{{ $userGroup->userName }}</p>
                       </td>
                       <td>
-                        <a class="btn btn-link btn-sm btn-rounded" href="#">
+                        <a class="btn btn-link btn-sm btn-rounded" href="{{ route('ugroups.edit', ['user_group_id'=>$userGroup->id]) }}">
                         {{ __('Edit') }}
                         </a>
-                        <form method="post" action="#">
+                        <form method="post" action="{{ route('ugroups.delete', ['user_group_id'=>$userGroup->id]) }}">
                         @csrf
                         <input type="submit" value="{{ __('Delete') }}" class="btn btn-link btn-sm btn-rounded">
                         </form>

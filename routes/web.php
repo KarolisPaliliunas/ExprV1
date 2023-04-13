@@ -66,7 +66,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 //Group
 Route::middleware(['auth', 'verified'])->group(function ($project_id = null) {
-    Route::get('/user-groups', [UserGroupController::class, 'show'])->name('ugroups.list');
+    Route::get('/user-group', [UserGroupController::class, 'show'])->name('ugroups.list');
+    Route::get('/user-group-create', [UserGroupController::class, 'create'])->name('ugroups.create');
+    Route::get('/user-group-edit/{user_group_id}', [UserGroupController::class, 'edit'])->name('ugroups.edit');
+    Route::post('/user-group-new', [UserGroupController::class, 'store'])->name('ugroups.new');
+    Route::post('/user-group-update/{user_group_id}', [UserGroupController::class, 'update'])->name('ugroups.update');
+    Route::post('/user-group-delete/{user_group_id}', [UserGroupController::class, 'destroy'])->name('ugroups.delete');
 });
 
 //Auth routes (include)

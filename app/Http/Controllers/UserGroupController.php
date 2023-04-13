@@ -6,6 +6,8 @@ use App\Models\UserGroup;
 use App\Http\Requests\StoreUserGroupRequest;
 use App\Http\Requests\UpdateUserGroupRequest;
 use Illuminate\Http\Request;
+//added
+use Illuminate\Support\Facades\Auth;
 
 class UserGroupController extends Controller
 {
@@ -27,7 +29,7 @@ class UserGroupController extends Controller
      */
     public function create()
     {
-        //
+        return view('user-group-editor');
     }
 
     /**
@@ -36,9 +38,18 @@ class UserGroupController extends Controller
      * @param  \App\Http\Requests\StoreUserGroupRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreUserGroupRequest $request)
+    public function store(Request $request)
     {
-        //
+        //setup
+        $newGroup = new UserGroup();
+        $newGroup->name = $request->name;
+        $newGroup->description = $request->description;
+        $newGroup->group_join_code = $request->groupJoinCode;
+        $newGroup->user_created_id = Auth::user()->id;
+
+        //action
+        $newGroup->save();
+        return redirect()->route('ugroups.list');
     }
 
     /**
@@ -49,14 +60,16 @@ class UserGroupController extends Controller
      */
     public function show()
     {
-        $userGroups = UserGroup::
-        where('user_created_id', '!=', -1)
-        ->join('users', 'user_groups.user_created_id', '=', 'users.id')
-        ->select('expert_system_projects.*', 'users.name AS userName')
-        ->latest()->paginate(5);
+        $currentUserID = Auth::user()->id;
+
+        $userGroups = UserGroup::where('user_created_id', '=', $currentUserID)
+            ->where('user_created_id', '!=', -1)
+            ->join('users', 'user_groups.user_created_id', '=', 'users.id')
+            ->select('user_groups.*', 'users.name AS userName')
+            ->latest()->paginate(5);
 
         return view('user-groups', compact('userGroups'))
-        ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -65,9 +78,13 @@ class UserGroupController extends Controller
      * @param  \App\Models\UserGroup  $userGroup
      * @return \Illuminate\Http\Response
      */
-    public function edit(UserGroup $userGroup)
+    public function edit($user_group_id)
     {
-        //
+        //setup
+        $userGroupToEdit = UserGroup::find($user_group_id);
+
+        //action
+        return view('user-group-editor', ['userGroupToEdit' => $userGroupToEdit]);
     }
 
     /**
@@ -77,9 +94,19 @@ class UserGroupController extends Controller
      * @param  \App\Models\UserGroup  $userGroup
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUserGroupRequest $request, UserGroup $userGroup)
+    public function update(Request $request, $user_group_id)
     {
-        //
+        //setup
+        $userGroupToUpdate = UserGroup::find($user_group_id);
+
+        $nameToUpate = $request->name;
+        $descriptionToUpate = $request->description;
+        $groupJoinCodeToUpdate = $request->groupJoinCode;
+
+        //action
+        $userGroupToUpdate->update(['name' => $nameToUpate, 'description' => $descriptionToUpate, 'group_join_code' => $groupJoinCodeToUpdate]);
+
+        return redirect()->route('ugroups.list');
     }
 
     /**
@@ -88,8 +115,13 @@ class UserGroupController extends Controller
      * @param  \App\Models\UserGroup  $userGroup
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UserGroup $userGroup)
+    public function destroy($user_group_id)
     {
-        //
+        //setup
+        $userGroupToDestroy = UserGroup::find($user_group_id);
+
+        //action
+        $userGroupToDestroy->delete();
+        return redirect()->route('ugroups.list');
     }
 }
