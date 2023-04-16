@@ -1,6 +1,6 @@
 
 <?php
-traverseArray($projectData, $project_id);
+traverseArray($projectTree, $project_id);
 
 function traverseArray($DataArray, $project_id){
     //setup

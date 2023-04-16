@@ -267,6 +267,15 @@ class ExpertSystemProjectController extends Controller
         return redirect()->route('project.list');
     }
 
+    public function buildExpertSystemTree($project_id){
+        //setup
+        $project = ExpertSystemProject::find($project_id);
+        $projectTree = $this->generateDataArray($project_id);
+
+        //action
+        return view('es-tree-editor', ['project'=>$project, 'projectTree'=>$projectTree]);
+    }
+
     public function storeFromExchange($xmlData) {
         //setup
         $errorValue = null;
@@ -407,6 +416,7 @@ class ExpertSystemProjectController extends Controller
     
     }
 
+    //Generate project es data array
     private function generateDataArray($received_project_id) {
         //setup
         $data = array();

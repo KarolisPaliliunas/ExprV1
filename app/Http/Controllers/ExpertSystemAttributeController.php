@@ -55,7 +55,7 @@ class ExpertSystemAttributeController extends Controller
 
         //action
         $newAttribute->save();
-        return redirect()->route('project.create', ['project_id' => $project_id]);
+        return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
     }
 
     /**
@@ -97,7 +97,7 @@ class ExpertSystemAttributeController extends Controller
 
         //action
         $attributeToUpdate->update(['name'=>$nameToUpate, 'description'=>$descriptionToUpate]);
-        return redirect()->route('project.create', ['project_id' => $project_id]);
+        return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
     }
 
     /**
@@ -113,6 +113,6 @@ class ExpertSystemAttributeController extends Controller
 
                 //action
                 $attributeToDestroy->delete();
-                return redirect()->route('project.create', ['project_id' => $project_id]);
+                return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
     }
 }

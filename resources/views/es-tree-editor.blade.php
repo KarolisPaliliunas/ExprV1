@@ -1,13 +1,17 @@
 <x-wrapper-layout>
+    <form method="get" action="{{ route('project.list') }}">
+    @csrf
+        <button type="submit" class="btn btn-outline-danger form-control" style="width:auto; margin-left:90%">{{ __('BackToList') }}</button>
+    </form>
     @isset ($project->id)
-      @isset ($projectData)
+      @isset ($projectTree)
         <div class="border border-secondary overflow-auto" style="height:600px; width:100%; margin-top:20px">
           <div class="tree">
-            @include('recursive', ['projectData' => $projectData, 'project_id' => $project->id])
+            @include('recursive', ['projectTree' => $projectTree, 'project_id' => $project->id])
           </div>
         </div>
       @endisset
-      @empty ($projectData)
+      @empty ($projectTree)
         <div class="border border-secondary overflow-auto" style="height:600px; width:100%; margin-top:20px">
           <form method="post" action="{{ route('attribute.new', ['item_id'=>$project->id, 'project_id'=>$project->id, 'createForProject'=>true]) }}">
           @csrf

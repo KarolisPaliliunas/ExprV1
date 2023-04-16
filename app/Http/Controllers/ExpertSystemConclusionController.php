@@ -47,7 +47,7 @@ class ExpertSystemConclusionController extends Controller
         
                 //action
                 $newConclusion->save();
-                return redirect()->route('project.create', ['project_id' => $project_id]);
+                return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
     }
 
     /**
@@ -88,7 +88,7 @@ class ExpertSystemConclusionController extends Controller
 
         //action
         $conclusionToUpdate->update(['name'=>$nameToUpate, 'description'=>$descriptionToUpate]);
-        return redirect()->route('project.create', ['project_id' => $project_id]);
+        return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
     }
 
     /**
@@ -104,6 +104,6 @@ class ExpertSystemConclusionController extends Controller
 
         //action
         $conclusionToDestroy->delete();
-        return redirect()->route('project.create', ['project_id' => $project_id]);
+        return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
     }
 }

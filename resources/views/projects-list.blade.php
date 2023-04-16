@@ -62,7 +62,7 @@
                         <a class="btn btn-link btn-sm btn-rounded" href="{{ route('project.edit', ['project_id'=>$project->id, 'filterType'=>$filterType, 'filterValue'=>$filterValue]) }}">
                         {{ __('Edit') }}
                         </a>
-                        <a class="btn btn-link btn-sm btn-rounded" href="#">
+                        <a class="btn btn-link btn-sm btn-rounded" href="{{ route('project.generateTreeEditor', ['project_id'=>$project->id]) }}">
                         {{ __('Manage ES tree') }}
                         </a>
                         <form method="post" action="{{ route('project.delete', ['project_id'=>$project->id]) }}">
