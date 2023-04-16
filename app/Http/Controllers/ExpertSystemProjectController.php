@@ -42,20 +42,13 @@ class ExpertSystemProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, $project_id = null, $filterType = null, $filterValue = null)
+    public function create(Request $request, $filterType = null, $filterValue = null)
     {
         //setup
-        $project = null;
-        $projectData = null;
-        if ($project_id){
-            $project = ExpertSystemProject::find($project_id);
-            if ($project){
-                $projectData = $this->generateDataArray($project_id);
-            }
-        }
+
         //$this->traverseArray($projectData, 0, ""); --FOR TESTING
         //Redirect to view
-        return view('project-editor', ['project'=>$project, 'projectData'=>$projectData, 'filterType'=>$filterType, 'filterValue'=>$filterValue]);
+        return view('project-editor', ['filterType'=>$filterType, 'filterValue'=>$filterValue]);
     }
 
     /**
@@ -75,7 +68,7 @@ class ExpertSystemProjectController extends Controller
 
         //action
         $newProject->save();
-        return redirect()->route('project.create', ['project_id' => $newProject->id]);
+        return redirect()->route('project.list');
     }
 
     /**
@@ -228,9 +221,13 @@ class ExpertSystemProjectController extends Controller
      * @param  \App\Models\ExpertSystemProject  $expertSystemProject
      * @return \Illuminate\Http\Response
      */
-    public function edit(ExpertSystemProject $expertSystemProject)
+    public function edit($project_id, $filterType = null, $filterValue = null)
     {
-        //
+                //setup
+                $projectToEdit = ExpertSystemProject::find($project_id);
+
+                //action
+                return view('project-editor', ['projectToEdit' => $projectToEdit, 'filterType'=>$filterType, 'filterValue'=>$filterValue]);
     }
 
     /**
@@ -251,7 +248,7 @@ class ExpertSystemProjectController extends Controller
         //action
         $projectToUpdate->update(['name'=>$nameToUpate, 'description'=>$descriptionToUpate]);
 
-        return redirect()->route('project.create', ['project_id' => $project_id]);
+        return redirect()->route('project.list');
     }
 
     /**

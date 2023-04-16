@@ -12,7 +12,7 @@
                         {{ __("Projects") }}
                     </div>
                     <div class="p-6 text-gray-900 mb-4 col-sm-3">
-                        <a class="btn btn-success" href="{{ route('project.create', ['project_id'=>null]) }}">{{ __('Create new project') }}</a>
+                        <a class="btn btn-success" href="{{ route('project.create', ['filterType'=>$filterType, 'filterValue'=>$filterValue]) }}">{{ __('Create new project') }}</a>
                     </div>
                 </div>
                 <table class="table align-middle mb-0 bg-white">
@@ -59,8 +59,11 @@
                       <p class="fw-normal mb-1">{{ $project->created_at->format('Y-m-d') }}</p>
                       </td>
                       <td>
-                        <a class="btn btn-link btn-sm btn-rounded" href="{{ route('project.create', ['project_id'=>$project->id]) }}">
+                        <a class="btn btn-link btn-sm btn-rounded" href="{{ route('project.edit', ['project_id'=>$project->id, 'filterType'=>$filterType, 'filterValue'=>$filterValue]) }}">
                         {{ __('Edit') }}
+                        </a>
+                        <a class="btn btn-link btn-sm btn-rounded" href="#">
+                        {{ __('Manage ES tree') }}
                         </a>
                         <form method="post" action="{{ route('project.delete', ['project_id'=>$project->id]) }}">
                         @csrf

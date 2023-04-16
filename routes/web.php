@@ -37,7 +37,8 @@ Route::middleware('auth')->group(function () {
 //Project
 Route::middleware(['auth', 'verified'])->group(function ($project_id = null) { // applies to all route groups
     Route::get('/projects', [ExpertSystemProjectController::class, 'index'])->name('project.list');
-    Route::get('/projects-create/{project_id?}', [ExpertSystemProjectController::class, 'create'])->name('project.create');
+    Route::get('/projects-create', [ExpertSystemProjectController::class, 'create'])->name('project.create');
+    Route::get('/projects-edit/{project_id}', [ExpertSystemProjectController::class, 'edit'])->name('project.edit');
     Route::post('/projects-new', [ExpertSystemProjectController::class, 'store'])->name('project.new');
     Route::post('/projects-update/{project_id}', [ExpertSystemProjectController::class, 'update'])->name('project.update');
     Route::post('/projects-delete/{project_id}', [ExpertSystemProjectController::class, 'destroy'])->name('project.delete');
