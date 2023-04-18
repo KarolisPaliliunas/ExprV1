@@ -65,6 +65,10 @@
                         <a class="btn btn-link btn-sm btn-rounded" href="{{ route('project.generateTreeEditor', ['project_id'=>$project->id]) }}">
                         {{ __('Manage ES tree') }}
                         </a>
+                        <form method="get" action="{{ route('project.executeNoData', ['project_id'=>$project->id]) }}">
+                        @csrf
+                        <input type="submit" value="{{ __('Execute') }}" class="btn btn-link btn-sm btn-rounded">
+                        </form>
                         <form method="post" action="{{ route('project.delete', ['project_id'=>$project->id]) }}">
                         @csrf
                         <input type="submit" value="{{ __('Delete') }}" class="btn btn-link btn-sm btn-rounded">

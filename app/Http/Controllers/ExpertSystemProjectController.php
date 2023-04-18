@@ -223,11 +223,11 @@ class ExpertSystemProjectController extends Controller
      */
     public function edit($project_id, $filterType = null, $filterValue = null)
     {
-                //setup
-                $projectToEdit = ExpertSystemProject::find($project_id);
-
-                //action
-                return view('project-editor', ['projectToEdit' => $projectToEdit, 'filterType'=>$filterType, 'filterValue'=>$filterValue]);
+        //setup
+        $projectToEdit = ExpertSystemProject::find($project_id);
+        
+        //action
+        return view('project-editor', ['projectToEdit' => $projectToEdit, 'filterType'=>$filterType, 'filterValue'=>$filterValue]);
     }
 
     /**
@@ -265,6 +265,33 @@ class ExpertSystemProjectController extends Controller
         //action
         $projectToDestroy->delete();
         return redirect()->route('project.list');
+    }
+
+    public function execute($project_id, $currentAttributeId = null, $pickedValueId = null)
+    {
+        //setup
+        //if (!empty($currentAttributeId)){
+         //   dd("HERE: ".$project_id."  ATTTR: ".$currentAttributeId);
+        //}
+        $projectToExcecute = ExpertSystemProject::find($project_id);
+        $newAttribute = null;
+        $valuesList = null;
+        $setConclusion = null;
+
+        if(empty($currentAttributeId)) {
+            $newAttribute = $this->getAttributeByProject($project_id);
+            $valuesList = $this->getValues($newAttribute['id']);
+        } else {
+            $setConclusion = $this->getConclusion($pickedValueId);
+                if(empty($setConclusion)) {
+                    $newAttribute = $this->getAttributeByValue($pickedValueId);
+                    $valuesList = $this->getValues($newAttribute['id']);
+                }
+        }
+
+        //action
+        //return redirect()->route('project.execute', ['project_id'=>$project_id, 'currentAttribute'=>$newAttribute['id'], 'valuesList'=>$valuesList, 'conclusion'=>$setConclusion]);
+        return view('es-tree-executor', ['project'=>$projectToExcecute, 'attribute'=>$newAttribute, 'values'=>$valuesList, 'conclusion'=>$setConclusion]);
     }
 
     public function buildExpertSystemTree($project_id){
