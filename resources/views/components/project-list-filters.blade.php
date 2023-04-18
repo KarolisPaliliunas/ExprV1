@@ -6,40 +6,22 @@
     <div class="row">
         <div class="form-outline mb-4 col-sm-3">
             <select class="form-select" name="filterType">
-              @if ($filterType == 'projectsMy')
-              <option selected value="projectsMy">{{ __('Created by me') }}</option>
+            @foreach(\App\Enums\ProjectFilterEnum::cases() as $filterType)
+              @if ($filterTypeValue == $filterType->value)
+              <option selected value="{{$filterType->value}}">{{ __($filterType->name) }} VALUE {{$filterType->value}}</option>
               @else
-              <option value="projectsMy">{{ __('Created by me') }}</option>
+              <option value="{{$filterType->value}}">{{ __($filterType->name) }} VALUE {{$filterType->value}}</option>
               @endif
-              @if ($filterType == 'projectsPublished')
-              <option selected value="projectsPublished">{{ __('Published') }}</option>
-              @else
-              <option value="projectsPublished">{{ __('Published') }}</option>
-              @endif
-              @if ($filterType == 'projectsForMe')
-              <option selected value="projectsForMe">{{ __('Projects assigned to me') }}</option>
-              @else
-              <option value="projectsForMe">{{ __('Projects assigned to me') }}</option>
-              @endif
-              @if ($filterType == 'projectsInGroup')
-              <option selected value="projectsInGroup">{{ __('Projects assigned to my groups') }}</option>
-              @else
-              <option value="projectsInGroup">{{ __('Projects assigned to my groups') }}</option>
-              @endif
-              @if ($filterType == 'projectsAll')
-              <option selected value="projectsAll">{{ __('All projects') }}</option>
-              @else
-              <option value="projectsAll">{{ __('All projects') }}</option>
-              @endif
+            @endforeach
             </select>
         </div>
     
         <div class="form-outline mb-4 col-sm-3">
-        @isset ($filterValue)
-            <input type="text" id="projects-filter-search" class="form-control" value="{{ $filterValue }}" name="filterValue"/>
+        @isset ($filterSearchValue)
+            <input type="text" id="projects-filter-search" class="form-control" value="{{ $filterSearchValue }}" name="filterSearchValue"/>
         @endisset
-        @empty ($filterValue)
-            <input type="text" id="projects-filter-search" class="form-control" name="filterValue"/>
+        @empty ($filterSearchValue)
+            <input type="text" id="projects-filter-search" class="form-control" name="filterSearchValue"/>
         @endempty
         </div>
         <div class="mb-4 col-sm-6">

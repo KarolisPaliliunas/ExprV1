@@ -1,7 +1,7 @@
 <x-app-layout>
     <!-- FILTERS -->
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <x-project-list-filters :filterType='$filterType' :filterValue='$filterValue'></x-project-list-filters>
+        <x-project-list-filters :filterTypeValue='$filterTypeValue' :filterSearchValue='$filterSearchValue'></x-project-list-filters>
     </div>
 
     <div class="py-12">
@@ -12,7 +12,7 @@
                         {{ __("Projects") }}
                     </div>
                     <div class="p-6 text-gray-900 mb-4 col-sm-3">
-                        <a class="btn btn-success" href="{{ route('project.create', ['filterType'=>$filterType, 'filterValue'=>$filterValue]) }}">{{ __('Create new project') }}</a>
+                        <a class="btn btn-success" href="{{ route('project.create', ['filterType'=>$filterTypeValue, 'filterValue'=>$filterSearchValue]) }}">{{ __('Create new project') }}</a>
                     </div>
                 </div>
                 <table class="table align-middle mb-0 bg-white">
@@ -59,7 +59,7 @@
                       <p class="fw-normal mb-1">{{ $project->created_at->format('Y-m-d') }}</p>
                       </td>
                       <td>
-                        <a class="btn btn-link btn-sm btn-rounded" href="{{ route('project.edit', ['project_id'=>$project->id, 'filterType'=>$filterType, 'filterValue'=>$filterValue]) }}">
+                        <a class="btn btn-link btn-sm btn-rounded" href="{{ route('project.edit', ['project_id'=>$project->id, 'filterType'=>$filterTypeValue, 'filterValue'=>$filterSearchValue]) }}">
                         {{ __('Edit') }}
                         </a>
                         <a class="btn btn-link btn-sm btn-rounded" href="{{ route('project.generateTreeEditor', ['project_id'=>$project->id]) }}">

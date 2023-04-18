@@ -43,6 +43,8 @@ Route::middleware(['auth', 'verified'])->group(function ($project_id = null) { /
     Route::post('/projects-new', [ExpertSystemProjectController::class, 'store'])->name('project.new');
     Route::post('/projects-update/{project_id}', [ExpertSystemProjectController::class, 'update'])->name('project.update');
     Route::post('/projects-delete/{project_id}', [ExpertSystemProjectController::class, 'destroy'])->name('project.delete');
+    
+    //excecution
     Route::get('/projects-execute/{project_id}/current-attr/{currentAttributeId}/picked-val/{pickedValueId}', [ExpertSystemProjectController::class, 'execute'])->name('project.execute');
     Route::get('/projects-execute/{project_id}', [ExpertSystemProjectController::class, 'execute'])->name('project.executeNoData');
 });

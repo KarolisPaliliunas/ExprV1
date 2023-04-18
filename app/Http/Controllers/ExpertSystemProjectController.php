@@ -25,16 +25,16 @@ class ExpertSystemProjectController extends Controller
     public function index(Request $request)
     {
         //setup
-        $filterType = $request->filterType;
-        $filterValue = $request->filterValue;
+        $filterTypeValue = $request->filterTypeValue;
+        $filterSearchValue = $request->filterSearchValue;
 
         //Redirect to show
-        if ($filterType==null && $filterValue==null)
-            return $this->show('projectsMy');
-        elseif ($filterValue != null )
-            return $this->show($filterType, $filterValue);
+        if ($filterTypeValue==null && $filterSearchValue==null)
+            return $this->show(10);
+        elseif ($filterSearchValue != null )
+            return $this->show($filterTypeValue, $filterSearchValue);
         else
-            return $this->show($filterType);
+            return $this->show($filterTypeValue);
     }
 
     /**
@@ -77,16 +77,17 @@ class ExpertSystemProjectController extends Controller
      * @param  \App\Models\ExpertSystemProject  $expertSystemProject
      * @return \Illuminate\Http\Response
      */
-    public function show($filterType, $filterValue = null)
+    public function show($filterTypeValue, $filterSearchValue = null)
     {
         //---setup
         $currentUserID = Auth::user()->id;
         $currentUserGroupID = Auth::user()->group_id;
-
+        if ($filterTypeValue != 10)
+        dd($filterTypeValue."  AND  ".$filterSearchValue);
         //---action
-        switch ($filterType){
-            case 'projectsMy':
-                if($filterValue == null){
+        switch ($filterTypeValue){
+            case 10:
+                if($filterSearchValue == null){
                     $projects = ExpertSystemProject::
                     where('user_created_id', '=', $currentUserID)
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
@@ -94,47 +95,47 @@ class ExpertSystemProjectController extends Controller
                     ->latest()->paginate(5);
 
                     return view('projects-list', compact('projects'))
-                    ->with('filterType', $filterType)
-                    ->with('filterValue', $filterValue)
+                    ->with('filterTypeValue', $filterTypeValue)
+                    ->with('filterSearchValue', $filterSearchValue)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 } else {
                     $projects = ExpertSystemProject::
                     where('user_created_id', '=', $currentUserID)
-                    ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterValue)."%'")
+                    ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterSearchValue)."%'")
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
                     ->select('expert_system_projects.*', 'users.name AS userName')
                     ->latest()->paginate(5);
 
                     return view('projects-list', compact('projects'))
-                    ->with('filterType', $filterType)
-                    ->with('filterValue', $filterValue)
+                    ->with('filterTypeValue', $filterTypeValue)
+                    ->with('filterSearchValue', $filterSearchValue)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 }
-            case 'projectsPublished':
-                if($filterValue == null){
+            case 20:
+                if($filterSearchValue == null){
                     $projects = ExpertSystemProject::
                     where('is_published', '=', true)->whereNotNull('is_published')
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
                     ->select('expert_system_projects.*', 'users.name AS userName')
                     ->latest()->paginate(5);
                     return view('projects-list', compact('projects'))
-                    ->with('filterType', $filterType)
-                    ->with('filterValue', $filterValue)
+                    ->with('filterTypeValue', $filterTypeValue)
+                    ->with('filterSearchValue', $filterSearchValue)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 } else {
                     $projects = ExpertSystemProject::
                     where('is_published', '=', true)->whereNotNull('is_published')
-                    ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterValue)."%'")
+                    ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterSearchValue)."%'")
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
                     ->select('expert_system_projects.*', 'users.name AS userName')
                     ->latest()->paginate(5);
                     return view('projects-list', compact('projects'))
-                    ->with('filterType', $filterType)
-                    ->with('filterValue', $filterValue)
+                    ->with('filterTypeValue', $filterTypeValue)
+                    ->with('filterSearchValue', $filterSearchValue)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 }
-            case 'projectsForMe':
-                if($filterValue == null){
+            case 30:
+                if($filterSearchValue == null){
                     $projects = ExpertSystemProject::
                     where('user_project_links.user_id', '=', $currentUserID)
                     ->join('user_project_links', 'user_project_links.es_project_id', '=', 'expert_system_projects.id')
@@ -142,25 +143,25 @@ class ExpertSystemProjectController extends Controller
                     ->select('expert_system_projects.*', 'users.name AS userName')
                     ->latest()->paginate(5);
                     return view('projects-list', compact('projects'))
-                    ->with('filterType', $filterType)
-                    ->with('filterValue', $filterValue)
+                    ->with('filterTypeValue', $filterTypeValue)
+                    ->with('filterSearchValue', $filterSearchValue)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 } else {
                     $projects = ExpertSystemProject::
                     where('user_project_links.user_id', '=', $currentUserID)
-                    ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterValue)."%'")
+                    ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterSearchValue)."%'")
                     ->join('user_project_links', 'user_project_links.es_project_id', '=', 'expert_system_projects.id')
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
                     ->select('expert_system_projects.*', 'users.name AS userName')
                     ->latest()->paginate(5);
                     return view('projects-list', compact('projects'))
-                    ->with('filterType', $filterType)
-                    ->with('filterValue', $filterValue)
+                    ->with('filterTypeValue', $filterTypeValue)
+                    ->with('filterSearchValue', $filterSearchValue)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 }
-            case 'projectsInGroup':
+            case 40:
                 if($currentUserGroupID != null){
-                    if($filterValue == null){
+                    if($filterSearchValue == null){
                         $projects = ExpertSystemProject::
                         where('group_project_links.user_group_id', '=', $currentUserID)
                         ->join('group_project_links', 'group_project_links.es_project_id', '=', 'expert_system_projects.id')
@@ -168,48 +169,48 @@ class ExpertSystemProjectController extends Controller
                         ->select('expert_system_projects.*', 'users.name AS userName')
                         ->latest()->paginate(5);
                         return view('projects-list', compact('projects'))
-                        ->with('filterType', $filterType)
-                        ->with('filterValue', $filterValue)
+                        ->with('filterTypeValue', $filterTypeValue)
+                        ->with('filterSearchValue', $filterSearchValue)
                         ->with('i', (request()->input('page', 1) - 1) * 5);
                     } else {
                         $projects = ExpertSystemProject::
                         where('group_project_links.user_id', '=', $currentUserID)
-                        ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterValue)."%'")
+                        ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterSearchValue)."%'")
                         ->join('group_project_links', 'group_project_links.es_project_id', '=', 'expert_system_projects.id')
                         ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
                         ->select('expert_system_projects.*', 'users.name AS userName')
                         ->latest()->paginate(5);
                         return view('projects-list', compact('projects'))
-                        ->with('filterType', $filterType)
-                        ->with('filterValue', $filterValue)
+                        ->with('filterTypeValue', $filterTypeValue)
+                        ->with('filterSearchValue', $filterSearchValue)
                         ->with('i', (request()->input('page', 1) - 1) * 5);
                     }
                 } else {
                     $projects = array();
                     return view('projects-list', compact('projects'))
-                    ->with('filterType', $filterType)
-                    ->with('filterValue', $filterValue)
+                    ->with('filterTypeValue', $filterTypeValue)
+                    ->with('filterSearchValue', $filterSearchValue)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 }
-            case 'projectsAll':
-                if($filterValue == null){
+            case 50:
+                if($filterSearchValue == null){
                     $projects = ExpertSystemProject::
                     join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
                     ->select('expert_system_projects.*', 'users.name AS userName')
                     ->latest()->paginate(5);
                     return view('projects-list', compact('projects'))
-                    ->with('filterType', $filterType)
-                    ->with('filterValue', $filterValue)
+                    ->with('filterTypeValue', $filterTypeValue)
+                    ->with('filterSearchValue', $filterSearchValue)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 } else {
                     $projects = ExpertSystemProject::
-                    whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterValue)."%'")
+                    whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterSearchValue)."%'")
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
                     ->select('expert_system_projects.*', 'users.name AS userName')
                     ->latest()->paginate(5);
                     return view('projects-list', compact('projects'))
-                    ->with('filterType', $filterType)
-                    ->with('filterValue', $filterValue)
+                    ->with('filterTypeValue', $filterTypeValue)
+                    ->with('filterSearchValue', $filterSearchValue)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 }
         }
