@@ -2,10 +2,11 @@
 {{ __('Filters') }}
 </h2>
 
-<form method="GET" action="{{ route('project.list') }}">
+<form method="POST" action="{{ route('project.listFiltered') }}">
+    @csrf
     <div class="row">
         <div class="form-outline mb-4 col-sm-3">
-            <select class="form-select" name="filterType">
+            <select class="form-select" name="filterTypeValue">
             @foreach(\App\Enums\ProjectFilterEnum::cases() as $filterType)
               @if ($filterTypeValue == $filterType->value)
               <option selected value="{{$filterType->value}}">{{ __($filterType->name) }} VALUE {{$filterType->value}}</option>

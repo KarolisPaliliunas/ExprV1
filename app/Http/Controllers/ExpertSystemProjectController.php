@@ -24,6 +24,7 @@ class ExpertSystemProjectController extends Controller
      */
     public function index(Request $request)
     {
+        
         //setup
         $filterTypeValue = $request->filterTypeValue;
         $filterSearchValue = $request->filterSearchValue;
@@ -48,7 +49,7 @@ class ExpertSystemProjectController extends Controller
 
         //$this->traverseArray($projectData, 0, ""); --FOR TESTING
         //Redirect to view
-        return view('project-editor', ['filterType'=>$filterType, 'filterValue'=>$filterValue]);
+        return view('project-editor');
     }
 
     /**
@@ -82,8 +83,7 @@ class ExpertSystemProjectController extends Controller
         //---setup
         $currentUserID = Auth::user()->id;
         $currentUserGroupID = Auth::user()->group_id;
-        if ($filterTypeValue != 10)
-        dd($filterTypeValue."  AND  ".$filterSearchValue);
+
         //---action
         switch ($filterTypeValue){
             case 10:
