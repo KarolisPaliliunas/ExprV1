@@ -76,9 +76,13 @@ Route::middleware(['auth', 'verified'])->group(function ($project_id = null) {
     Route::get('/user-group', [UserGroupController::class, 'show'])->name('ugroups.list');
     Route::get('/user-group-create', [UserGroupController::class, 'create'])->name('ugroups.create');
     Route::get('/user-group-edit/{user_group_id}', [UserGroupController::class, 'edit'])->name('ugroups.edit');
+    Route::get('/user-group/{user_group_id}/user-list', [UserGroupController::class, 'userList'])->name('ugroups.userList');
     Route::post('/user-group-new', [UserGroupController::class, 'store'])->name('ugroups.new');
     Route::post('/user-group-update/{user_group_id}', [UserGroupController::class, 'update'])->name('ugroups.update');
     Route::post('/user-group-delete/{user_group_id}', [UserGroupController::class, 'destroy'])->name('ugroups.delete');
+    Route::post('/user-group-join/create-link', [UserGroupController::class, 'joinGroup'])->name('ugroups.joinGroup');
+    Route::get('/user-group-join', [UserGroupController::class, 'joinGroupView'])->name('ugroups.joinGroupView');
+    Route::post('/user-group/{user_group_id}/remove-user/{user_id}', [UserGroupController::class, 'removeUserFromGroup'])->name('ugroups.removeUser');
 });
 
 //Auth routes (include)

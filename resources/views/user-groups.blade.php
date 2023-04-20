@@ -7,7 +7,10 @@
                         {{ __("Groups") }}
                     </div>
                     <div class="p-6 text-gray-900 mb-4 col-sm-3">
-                        <a class="btn btn-success" href="{{ route('ugroups.create') }}">{{ __('Create new group') }}</a>
+                        <a class="btn btn-success" href="{{ route('ugroups.create') }}">{{ __('CreateNewGroup') }}</a>
+                    </div>
+                    <div class="p-6 text-gray-900 mb-4 col-sm-3">
+                        <a class="btn btn-info" href="{{ route('ugroups.joinGroupView') }}">{{ __('JoinExistingGroup') }}</a>
                     </div>
                 </div>
                 <table class="table align-middle mb-0 bg-white">
@@ -37,12 +40,15 @@
                         <p class="fw-normal mb-1">{{ $userGroup->userName }}</p>
                       </td>
                       <td>
-                        <a class="btn btn-link btn-sm btn-rounded" href="{{ route('ugroups.edit', ['user_group_id'=>$userGroup->id]) }}">
-                        {{ __('Edit') }}
-                        </a>
+                        <form method="get" action="{{ route('ugroups.edit', ['user_group_id'=>$userGroup->id]) }}">
+                          <input type="submit" value="{{ __('Edit') }}" class="btn btn-link btn-sm btn-rounded">
+                        </form>
                         <form method="post" action="{{ route('ugroups.delete', ['user_group_id'=>$userGroup->id]) }}">
                         @csrf
-                        <input type="submit" value="{{ __('Delete') }}" class="btn btn-link btn-sm btn-rounded">
+                          <input type="submit" value="{{ __('Delete') }}" class="btn btn-link btn-sm btn-rounded">
+                        </form>
+                        <form method="get" action="{{ route('ugroups.userList', ['user_group_id'=>$userGroup->id]) }}">
+                          <input type="submit" value="{{ __('GroupUsersList') }}" class="btn btn-link btn-sm btn-rounded">
                         </form>
                       </td>
                     </tr>

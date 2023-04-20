@@ -8,6 +8,10 @@ use App\Http\Requests\UpdateUserGroupRequest;
 use Illuminate\Http\Request;
 //added
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\UserProjectLink;
+use App\Models\UserGroupLink;
+use Illuminate\Database\Query\Builder;
 
 class UserGroupController extends Controller
 {
@@ -124,4 +128,77 @@ class UserGroupController extends Controller
         $userGroupToDestroy->delete();
         return redirect()->route('ugroups.list');
     }
+
+    public function userList($user_group_id)
+    {
+        //setup
+        $userGroup = UserGroup::find($user_group_id);
+        $ownerId = $userGroup->user_created_id;
+        $userList = $this->getUsersByGroup($user_group_id);
+
+
+        //action
+        return view('user-group-user-list', ['userGroup' => $userGroup, 'userList' => $userList, 'ownerId' => $ownerId]);
+    }
+
+    public function joinGroupView(){
+
+        return view('join-group');
+    }
+
+    public function joinGroup(Request $request){
+        //setup
+        $userGroup = null;
+        $joinCode = $request->joinCode;
+
+        $userGroup = UserGroup::select()
+        ->where('group_join_code', '=', $joinCode)
+        ->first();
+
+        $currentUserID = Auth::user()->id;
+
+        //action
+        if(!empty($userGroup)){
+            $newLink = new UserGroupLink(); 
+            $newLink->user_group_id = $userGroup->id;
+            $newLink->user_id = $currentUserID;
+            $newLink->save();
+            
+            return redirect()->route('ugroups.list');
+        }
+        else{
+            return redirect()->route('ugroups.joinGroupView');
+        }
+    }
+
+    public function removeUserFromGroup($user_group_id, $user_id){
+        //setup
+
+        $userGroupLink = UserGroupLink::select()->
+        where('user_id', $user_id)->
+        where('user_group_id', $user_group_id)
+        ->first();
+
+        //action
+        $userGroupLink->delete();
+        return redirect()->route('ugroups.userList', ['user_group_id' => $user_group_id]);
+    }
+
+    //Additional funcs
+    private function getUsersByGroup($user_group_id){
+        
+        $users = User::select('*')->whereExists(function ($query) use($user_group_id) {
+            $query->select('user_id')
+                  ->from('user_group_links')
+                  ->whereRaw('user_group_links.user_id = users.id')
+                  ->whereRaw('user_group_links.user_group_id = '.$user_group_id);
+        })
+        ->get();
+
+        //dd($users);
+        if(empty($users)) $users = null;
+
+        return $users;
+    }
+
 }
