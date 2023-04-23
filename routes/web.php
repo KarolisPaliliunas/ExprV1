@@ -44,6 +44,14 @@ Route::middleware(['auth', 'verified'])->group(function ($project_id = null) { /
     Route::post('/projects-new', [ExpertSystemProjectController::class, 'store'])->name('project.new');
     Route::post('/projects-update/{project_id}', [ExpertSystemProjectController::class, 'update'])->name('project.update');
     Route::post('/projects-delete/{project_id}', [ExpertSystemProjectController::class, 'destroy'])->name('project.delete');
+    Route::post('/projects-publish/{project_id}', [ExpertSystemProjectController::class, 'publishProject'])->name('project.publish');
+    Route::post('/projects-unpublish/{project_id}', [ExpertSystemProjectController::class, 'unpublishProject'])->name('project.unpublish');
+    Route::get('/projects-assign-users/project/{project_id}', [ExpertSystemProjectController::class, 'assignUsersList'])->name('project.assignUsers');
+    Route::post('/assign-users', [ExpertSystemProjectController::class, 'assignUsers'])->name('project.assignSelectedUsers');
+    Route::get('/projects-assign-groups/project/{project_id}', [ExpertSystemProjectController::class, 'assignGroupsList'])->name('project.assignGroups');
+    Route::post('/assign-groups', [ExpertSystemProjectController::class, 'assignGroups'])->name('project.assignSelectedGroups');
+    Route::get('/projects-unassign-users/project/{project_id}', [ExpertSystemProjectController::class, 'unassignUsersList'])->name('project.unassignUsers');
+    Route::post('/unassign-users', [ExpertSystemProjectController::class, 'unassignUsers'])->name('project.unassignSelectedUsers');
     
     //excecution
     Route::get('/projects-execute/{project_id}/current-attr/{currentAttributeId}/picked-val/{pickedValueId}', [ExpertSystemProjectController::class, 'execute'])->name('project.execute');

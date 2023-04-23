@@ -201,4 +201,16 @@ class UserGroupController extends Controller
         return $users;
     }
 
+    public function numberOfUsersInGroup($user_group_id){
+        $numberofUsers = User::select()->
+            whereExists(function ($query) use($user_group_id) {
+                $query->select('user_id')
+                      ->from('user_group_links')
+                      ->whereRaw('user_group_links.user_id = users.id')
+                      ->whereRaw('user_group_links.user_group_id = '.$user_group_id);
+            })->count();
+        
+        return $numberofUsers;
+    }
+
 }

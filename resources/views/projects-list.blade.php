@@ -59,20 +59,45 @@
                       <p class="fw-normal mb-1">{{ $project->created_at->format('Y-m-d') }}</p>
                       </td>
                       <td>
-                        <a class="btn btn-link btn-sm btn-rounded" href="{{ route('project.edit', ['project_id'=>$project->id, 'filterType'=>$filterTypeValue, 'filterValue'=>$filterSearchValue]) }}">
-                        {{ __('Edit') }}
-                        </a>
-                        <a class="btn btn-link btn-sm btn-rounded" href="{{ route('project.generateTreeEditor', ['project_id'=>$project->id]) }}">
-                        {{ __('Manage ES tree') }}
-                        </a>
-                        <form method="get" action="{{ route('project.executeNoData', ['project_id'=>$project->id]) }}">
+                        <form method="get" action="{{ route('project.edit', ['project_id'=>$project->id, 'filterType'=>$filterTypeValue, 'filterValue'=>$filterSearchValue]) }}">
                         @csrf
-                        <input type="submit" value="{{ __('Execute') }}" class="btn btn-link btn-sm btn-rounded">
+                        <input type="submit" value="{{ __('Edit') }}" class="btn btn-link btn-sm btn-rounded">
                         </form>
                         <form method="post" action="{{ route('project.delete', ['project_id'=>$project->id]) }}">
                         @csrf
                         <input type="submit" value="{{ __('Delete') }}" class="btn btn-link btn-sm btn-rounded">
                         </form>
+                        @if($project->is_published == 1)
+                          <form method="get" action="{{ route('project.executeNoData', ['project_id'=>$project->id]) }}">
+                          @csrf
+                          <input type="submit" value="{{ __('Execute') }}" class="btn btn-link btn-sm btn-rounded">
+                          </form>
+                          <form method="post" action="{{ route('project.unpublish', ['project_id'=>$project->id]) }}">
+                          @csrf
+                          <input type="submit" value="{{ __('Unpublish') }}" class="btn btn-link btn-sm btn-rounded">
+                          </form>
+                          <form method="get" action="{{ route('project.assignUsers', ['project_id'=>$project->id]) }}">
+                          @csrf
+                          <input type="submit" value="{{ __('AssignForUsers') }}" class="btn btn-link btn-sm btn-rounded">
+                          </form>
+                          <form method="get" action="{{ route('project.assignGroups', ['project_id'=>$project->id]) }}">
+                          @csrf
+                          <input type="submit" value="{{ __('AssignForGroup') }}" class="btn btn-link btn-sm btn-rounded">
+                          </form>
+                          <form method="get" action="{{ route('project.unassignUsers', ['project_id'=>$project->id]) }}">
+                          @csrf
+                          <input type="submit" value="{{ __('UnassignForUsers') }}" class="btn btn-link btn-sm btn-rounded">
+                          </form>
+                        @else
+                          <form method="get" action="{{ route('project.generateTreeEditor', ['project_id'=>$project->id]) }}">
+                          @csrf
+                          <input type="submit" value="{{ __('ManageEsTree') }}" class="btn btn-link btn-sm btn-rounded">
+                          </form>
+                          <form method="post" action="{{ route('project.publish', ['project_id'=>$project->id]) }}">
+                          @csrf
+                          <input type="submit" value="{{ __('Publish') }}" class="btn btn-link btn-sm btn-rounded">
+                          </form>
+                        @endif
                       </td>
                     </tr>
                     @endforeach

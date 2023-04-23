@@ -12,6 +12,8 @@ use App\Models\ExpertSystemAttribute;
 use App\Models\ExpertSystemValue;
 use App\Models\ExpertSystemConclusion;
 use App\Models\User;
+use App\Models\UserGroup;
+use App\Models\UserProjectLink;
 use Exception;
 use SimpleXMLElement;
 
@@ -22,8 +24,7 @@ class ExpertSystemProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request){
         
         //setup
         $filterTypeValue = $request->filterTypeValue;
@@ -43,8 +44,7 @@ class ExpertSystemProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, $filterType = null, $filterValue = null)
-    {
+    public function create(Request $request, $filterType = null, $filterValue = null){
         //setup
 
         //$this->traverseArray($projectData, 0, ""); --FOR TESTING
@@ -58,8 +58,7 @@ class ExpertSystemProjectController extends Controller
      * @param  \App\Http\Requests\StoreExpertSystemProjectRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    { 
+    public function store(Request $request){ 
         //setup
         $newProject = new ExpertSystemProject(); 
         $newProject->name = $request->name;
@@ -78,8 +77,7 @@ class ExpertSystemProjectController extends Controller
      * @param  \App\Models\ExpertSystemProject  $expertSystemProject
      * @return \Illuminate\Http\Response
      */
-    public function show($filterTypeValue, $filterSearchValue = null)
-    {
+    public function show($filterTypeValue, $filterSearchValue = null){
         //---setup
         $currentUserID = Auth::user()->id;
         $currentUserGroupID = Auth::user()->group_id;
@@ -222,8 +220,7 @@ class ExpertSystemProjectController extends Controller
      * @param  \App\Models\ExpertSystemProject  $expertSystemProject
      * @return \Illuminate\Http\Response
      */
-    public function edit($project_id, $filterType = null, $filterValue = null)
-    {
+    public function edit($project_id, $filterType = null, $filterValue = null){
         //setup
         $projectToEdit = ExpertSystemProject::find($project_id);
         
@@ -238,8 +235,7 @@ class ExpertSystemProjectController extends Controller
      * @param  \App\Models\ExpertSystemProject  $expertSystemProject
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $project_id)
-    {
+    public function update(Request $request, $project_id){
         //setup
         $projectToUpdate = ExpertSystemProject::find($project_id);
 
@@ -258,8 +254,7 @@ class ExpertSystemProjectController extends Controller
      * @param  \App\Models\ExpertSystemProject  $expertSystemProject
      * @return \Illuminate\Http\Response
      */
-    public function destroy($project_id)
-    {
+    public function destroy($project_id){
         //setup
         $projectToDestroy = ExpertSystemProject::find($project_id);
 
@@ -268,8 +263,7 @@ class ExpertSystemProjectController extends Controller
         return redirect()->route('project.list');
     }
 
-    public function execute($project_id, $currentAttributeId = null, $pickedValueId = null)
-    {
+    public function execute($project_id, $currentAttributeId = null, $pickedValueId = null){
         //setup
         //if (!empty($currentAttributeId)){
          //   dd("HERE: ".$project_id."  ATTTR: ".$currentAttributeId);
@@ -337,6 +331,131 @@ class ExpertSystemProjectController extends Controller
         return $xmlData->asXML();//$xmlData;
     }
 
+    public function publishProject($project_id){
+        //setup
+        $projectToUpdate = ExpertSystemProject::find($project_id);
+        
+        //action
+        $projectToUpdate->update(['is_published'=>true]);
+        
+        return redirect()->route('project.list');
+    }
+
+    public function unpublishProject($project_id){
+        //setup
+        $projectToUpdate = ExpertSystemProject::find($project_id);
+
+        $userProjectLinks = UserProjectLink::select()->
+        where('es_project_id', $project_id)
+        ->get();
+        
+        //action
+        if(!empty($userProjectLinks)){
+            foreach ($userProjectLinks as $userProjectLink){
+                $userProjectLink->delete();
+            }
+        }
+
+        $projectToUpdate->update(['is_published'=>false]);
+        
+        return redirect()->route('project.list');
+    }
+    
+    public function assignUsersList($project_id){
+        //setup
+        $project = ExpertSystemProject::find($project_id);
+
+        $userList = $this->getUsersNotAssignedForProject($project_id);
+        
+        if (empty($userList->toArray()))
+            $userList = null;
+
+        //action
+        return view('assign-users-list', ['userList' => $userList, 'project' => $project]);
+    }
+
+    public function assignGroupsList($project_id){
+        //setup
+        $project = ExpertSystemProject::find($project_id);
+
+        $groupsListData = $this->getGroupsWithUnassignedUsers($project_id);
+        
+        if (empty($groupsListData))
+            $groupsListData = null;
+
+        //action
+        return view('assign-groups-list', ['groupsListData' => $groupsListData, 'project' => $project]);
+        
+    }
+
+    public function unassignUsersList($project_id){
+        //setup
+        $project = ExpertSystemProject::find($project_id);
+
+        $userList = $this->getUsersAssignedForProject($project_id);
+                
+        if (empty($userList->toArray()))
+            $userList = null;
+        
+        //action
+        return view('unassign-users-list', ['userList' => $userList, 'project' => $project]);
+    }
+
+    public function assignUsers(Request $request){
+        //setup
+
+        $receivedProject_id = $request->project_id;
+        $userIdsList = $request->selectedUsersIdsList;
+        
+        //action
+        foreach ($userIdsList as $userId){
+            $this->createUserProjectLink($userId, $receivedProject_id);
+        }
+
+        return redirect()->route('project.list');
+    }
+
+    public function unassignUsers(Request $request){
+        //setup
+
+        $receivedProject_id = $request->project_id;
+        $userIdsList = $request->selectedUsersIdsList;
+        
+        //action
+        foreach ($userIdsList as $userId){
+            $this->destroyUserProjectLink($userId, $receivedProject_id);
+        }
+
+        return redirect()->route('project.list');
+    }
+
+    public function assignGroups(Request $request){
+        //setup
+        $receivedProject_id = $request->project_id;
+        $groupsIdsList = $request->selectedGroupsIdsList;
+
+        
+        $userIdsNotAssignedToProjectInGroup = User::select('id')->
+        whereExists(function ($query) use($groupsIdsList) {
+            $query->select('user_id')
+                  ->from('user_group_links')
+                  ->whereRaw('user_group_links.user_id = users.id')
+                  ->whereIn('user_group_links.user_group_id', $groupsIdsList);
+        })->whereNotExists(function ($query) use($receivedProject_id) {
+            $query->select('user_id')
+                  ->from('user_project_links')
+                  ->whereRaw('user_project_links.user_id = users.id')
+                  ->whereRaw('user_project_links.es_project_id = '.$receivedProject_id);
+        })
+        ->distinct()->get();
+
+        //action
+        foreach ($userIdsNotAssignedToProjectInGroup as $userId){
+            $this->createUserProjectLink($userId->id, $receivedProject_id);
+        }
+
+        return redirect()->route('project.list');
+    }
     //additionalFunctions
 
     private function recursiveXMLBuilder($data, $xml_data){
@@ -528,6 +647,88 @@ class ExpertSystemProjectController extends Controller
            $conclusion = $conclusion->toArray();
 
         return $conclusion;
+    }
+
+    private function getUsersNotAssignedForProject($project_id){
+
+        $users = User::select('*')->whereNotExists(function ($query) use($project_id) {
+            $query->select('user_id')
+                  ->from('user_project_links')
+                  ->whereRaw('user_project_links.user_id = users.id')
+                  ->whereRaw('user_project_links.es_project_id = '.$project_id);
+        })
+        ->get();
+
+        return $users;
+    }
+
+    private function getGroupsWithUnassignedUsers($project_id){
+
+        $groupsData = [];
+        $allGroups = UserGroup::all();
+
+        foreach($allGroups as $group){
+
+            $localUserGrouControllerObject = new UserGroupController();
+            $newGroupDataRecord =[];
+            $userGroupId = $group->id;
+            $numberOfUsersInGroup = $localUserGrouControllerObject->numberOfUsersInGroup($userGroupId);
+
+            $numberOfUsersAssignedToProjectInGroup = User::select()->
+            whereExists(function ($query) use($userGroupId) {
+                $query->select('user_id')
+                      ->from('user_group_links')
+                      ->whereRaw('user_group_links.user_id = users.id')
+                      ->whereRaw('user_group_links.user_group_id = '.$userGroupId);
+            })->whereExists(function ($query) use($project_id) {
+                $query->select('user_id')
+                      ->from('user_project_links')
+                      ->whereRaw('user_project_links.user_id = users.id')
+                      ->whereRaw('user_project_links.es_project_id = '.$project_id);
+            })
+            ->count();
+
+            $newGroupDataRecord['userGroup'] = $group;
+            $newGroupDataRecord['numberOfUsersInGroup'] = $numberOfUsersInGroup;
+            $newGroupDataRecord['numberOfUsersAssignedToProjectInGroup'] = $numberOfUsersAssignedToProjectInGroup;
+
+            $groupsData[] = $newGroupDataRecord;
+        }
+
+        //dd($groupsData);
+        return $groupsData;
+    }
+
+    private function createUserProjectLink($user_id, $project_id){
+        //action
+        $newUserProjectLink = new UserProjectLink();
+        $newUserProjectLink->es_project_id = $project_id;
+        $newUserProjectLink->user_id = $user_id;
+        $newUserProjectLink->save();
+    }
+
+    private function destroyUserProjectLink($user_id, $project_id){
+        //setup
+        $userProjectLinkToDestory = UserProjectLink::select()->
+        where('user_id', $user_id)->
+        where('es_project_id', $project_id)
+        ->first();
+
+        //action
+        $userProjectLinkToDestory->delete();
+    }
+
+    private function getUsersAssignedForProject($project_id){
+
+        $users = User::select('*')->whereExists(function ($query) use($project_id) {
+            $query->select('user_id')
+                  ->from('user_project_links')
+                  ->whereRaw('user_project_links.user_id = users.id')
+                  ->whereRaw('user_project_links.es_project_id = '.$project_id);
+        })
+        ->get();
+
+        return $users;
     }
     //endfunctions
 
