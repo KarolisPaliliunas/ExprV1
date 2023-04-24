@@ -1,6 +1,17 @@
 <x-wrapper-layout>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="py-12">
+
+            <!-- ERRORS -->
+            @if ($errors->any())
+              @foreach ($errors->all() as $error)
+              <div class="alert alert-danger">
+                <p>{{ $error }}</p>
+              </div>
+              @endforeach
+            @endif
+            <!-- END OF ERRORS -->
+
             @isset ($userGroupToEdit)
             <form method="post" action="{{ route('ugroups.update', ['user_group_id' => $userGroupToEdit->id]) }}">
 
@@ -50,7 +61,7 @@
 
                 <!-- Join code input -->
                 <div class="form-outline mb-4">
-                    <input type="text" name="joinCode" id="joinCodeInput" class="form-control" />
+                    <input type="text" name="groupJoinCode" id="joinCodeInput" class="form-control" />
                     <label class="form-label" for="joinCodeInput">{{__("Join code")}}</label>
                 </div>
 

@@ -10,6 +10,17 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="py-12">
 
+
+            <!-- ERRORS -->
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                  <div class="alert alert-danger">
+                    <p>{{ $error }}</p>
+                  </div>
+                @endforeach
+            @endif
+            <!-- END OF ERRORS -->
+
             <form method="post" action="{{ route('ugroups.joinGroup') }}">
 
                 @csrf

@@ -16,6 +16,7 @@ use App\Models\UserGroup;
 use App\Models\UserProjectLink;
 use Exception;
 use SimpleXMLElement;
+use Illuminate\Validation\ValidationException;
 
 class ExpertSystemProjectController extends Controller
 {
@@ -59,6 +60,12 @@ class ExpertSystemProjectController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){ 
+        //validation
+        $request->validate([
+            'name' => 'required|min:3|max:255',
+            'description' => 'required'    
+        ]);
+
         //setup
         $newProject = new ExpertSystemProject(); 
         $newProject->name = $request->name;
@@ -68,7 +75,7 @@ class ExpertSystemProjectController extends Controller
 
         //action
         $newProject->save();
-        return redirect()->route('project.list');
+        return redirect()->route('project.list')->with('projectCreateSuccess', __('ProjectCreateSuccess'));;
     }
 
     /**
@@ -236,6 +243,13 @@ class ExpertSystemProjectController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $project_id){
+        //validation
+
+        $request->validate([
+            'name' => 'required|min:3|max:255',
+            'description' => 'required'    
+        ]);
+
         //setup
         $projectToUpdate = ExpertSystemProject::find($project_id);
 
@@ -245,7 +259,7 @@ class ExpertSystemProjectController extends Controller
         //action
         $projectToUpdate->update(['name'=>$nameToUpate, 'description'=>$descriptionToUpate]);
 
-        return redirect()->route('project.list');
+        return redirect()->route('project.list')->with('projectUpdateSuccess', __('ProjectUpdateSuccess'));
     }
 
     /**
@@ -255,12 +269,18 @@ class ExpertSystemProjectController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($project_id){
+        //validate
+        $noUsers = $this->validateNoUsersAssignedToProject($project_id);
+        if($noUsers == false)
+            throw ValidationException::withMessages(['NoFieldName' => __('ProjectHasAssignedUsers')]);
+
         //setup
         $projectToDestroy = ExpertSystemProject::find($project_id);
-
+        
         //action
+        $this->deleteAllItemsInProject($project_id);
         $projectToDestroy->delete();
-        return redirect()->route('project.list');
+        return redirect()->route('project.list')->with('projectDeleteSuccess', __('ProjectDeleteSuccess'));
     }
 
     public function execute($project_id, $currentAttributeId = null, $pickedValueId = null){
@@ -332,13 +352,19 @@ class ExpertSystemProjectController extends Controller
     }
 
     public function publishProject($project_id){
+        //validate
+        $allValuesHaveConclusion = $this->validateAllValuesHaveConclusion($project_id);
+
+        if ($allValuesHaveConclusion == false)
+            throw ValidationException::withMessages(['NoFieldName' => __('ProjectNotFinishedValuesWithNoConclusion')]);
+
         //setup
         $projectToUpdate = ExpertSystemProject::find($project_id);
         
         //action
         $projectToUpdate->update(['is_published'=>true]);
         
-        return redirect()->route('project.list');
+        return redirect()->route('project.list')->with('projectPublishSuccess', __('ProjectPublishSuccess'));
     }
 
     public function unpublishProject($project_id){
@@ -358,7 +384,7 @@ class ExpertSystemProjectController extends Controller
 
         $projectToUpdate->update(['is_published'=>false]);
         
-        return redirect()->route('project.list');
+        return redirect()->route('project.list')->with('projectUnpublishSuccess', __('ProjectUnpublishSuccess'));
     }
     
     public function assignUsersList($project_id){
@@ -730,10 +756,89 @@ class ExpertSystemProjectController extends Controller
 
         return $users;
     }
+
+    private function deleteAllItemsInProject($project_id){
+
+        $dataArray = $this->generateDataArray($project_id);
+        $this->traverseArrayAndDeleteItems($dataArray);
+
+    }
+
+    private function traverseArrayAndDeleteItems($array){
+        if($array){
+            $currentItemId = null;
+            foreach ($array as $key => $keyValue){
+                if($key == 'id')
+                    $currentItemId = $keyValue;
+                if($key == 'type' && $keyValue == 10){ // if attribute
+                    $attribute = ExpertSystemAttribute::find($currentItemId);
+                    $attribute->delete();
+                }
+                if($key == 'type' && $keyValue == 20){ // if value
+                    $value = ExpertSystemValue::find($currentItemId);
+                    $value->delete();
+                }
+                if($key == 'type' && $keyValue == 30){ // if conclusion
+                    $conclusion = ExpertSystemConclusion::find($currentItemId);
+                    $conclusion->delete();
+                }
+                if (is_array($keyValue)){
+                    $this->traverseArrayAndDeleteItems($keyValue);
+                }
+            }
+        }
+    }
     //endfunctions
 
+    //customValidators
+    private function validateAllValuesHaveConclusion($project_id){
+        $numberOfValuesWithoutConclusion = 0;
+        $dataArray = $this->generateDataArray($project_id);
+        $this->traverseArrayAndValidateItems($dataArray, $numberOfValuesWithoutConclusion);
+        
+        if ($numberOfValuesWithoutConclusion == 0)
+            return true;
+        else
+            return false;
+    }
+
+    private function traverseArrayAndValidateItems($array, &$counter){
+        if($array){
+            $currentItemId = null;
+            foreach ($array as $key => $keyValue){
+                if($key == 'id')
+                    $currentItemId = $keyValue;
+                if($key == 'type' && $keyValue == 20){ // if value
+                    $conclusion = $this->getConclusion($currentItemId);
+                    if(empty($conclusion))
+                        $counter++;
+                }
+                if($key == 'type' && $keyValue == 10){ // if attribute
+                    $values = $this->getValues($currentItemId);
+                    if(empty($values))
+                        $counter++;
+                }
+                if (is_array($keyValue)){
+                    $this->traverseArrayAndValidateItems($keyValue, $counter);
+                }
+            }
+        } else {
+            $counter = 100;
+        }  
+    }
+
+    public function validateNoUsersAssignedToProject($project_id){
+        $noUsers = true;
+        $userList = $this->getUsersAssignedForProject($project_id);
+        if(!empty($userList->toArray()))
+            $noUsers = false;
+
+        return $noUsers;  
+    }
+    //endCustomvalidators
+
     //TEST PRINT FUNCTION
-    function traverseArray($array, $counter, $idenString){
+    function traverseArrayTest($array, $counter, $idenString){
             $receivedCounter = 0;
             $receivedCounter = $counter;
             for($i=0; $i<=$receivedCounter; $i++){
@@ -744,7 +849,7 @@ class ExpertSystemProjectController extends Controller
             {
                 if (is_array($value))
                 {
-                    $this->traverseArray($value, $receivedCounter, $idenString);
+                    $this->traverseArrayTest($value, $receivedCounter, $idenString);
                 }
                 else
                 {

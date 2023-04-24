@@ -13,6 +13,40 @@
                         <a class="btn btn-info" href="{{ route('ugroups.joinGroupView') }}">{{ __('JoinExistingGroup') }}</a>
                     </div>
                 </div>
+
+                 <!-- ERRORS -->
+                 @if ($errors->any())
+                  @foreach ($errors->all() as $error)
+                  <div class="alert alert-danger">
+                    <p>{{ $error }}</p>
+                  </div>
+                  @endforeach
+                @endif
+                <!-- END OF ERRORS -->
+                <!-- MESSAGES -->
+                @if ($message = Session::get('groupCreateSuccess'))
+                  <div class="alert alert-success">
+                    <p>{{ $message }}</p>
+                  </div>
+                @elseif ($message = Session::get('groupUpdateSuccess'))
+                <div class="alert alert-success">
+                  <p>{{ $message }}</p>
+                </div>
+                @elseif ($message = Session::get('groupDeleteSuccess'))
+                <div class="alert alert-success">
+                  <p>{{ $message }}</p>
+                </div>
+                @elseif ($message = Session::get('groupJoinSuccess'))
+                <div class="alert alert-success">
+                  <p>{{ $message }}</p>
+                </div>
+                @elseif ($message = Session::get('projectUnpublishSuccess'))
+                <div class="alert alert-success">
+                  <p>{{ $message }}</p>
+                </div>
+                @endif
+                <!-- END OF MESSAGES -->
+
                 <table class="table align-middle mb-0 bg-white">
                   <thead class="bg-light">
                     <tr>

@@ -15,6 +15,40 @@
                         <a class="btn btn-success" href="{{ route('project.create', ['filterType'=>$filterTypeValue, 'filterValue'=>$filterSearchValue]) }}">{{ __('Create new project') }}</a>
                     </div>
                 </div>
+
+                <!-- ERRORS -->
+                @if ($errors->any())
+                  @foreach ($errors->all() as $error)
+                  <div class="alert alert-danger">
+                    <p>{{ $error }}</p>
+                  </div>
+                  @endforeach
+                @endif
+                <!-- END OF ERRORS -->
+                <!-- MESSAGES -->
+                @if ($message = Session::get('projectCreateSuccess'))
+                  <div class="alert alert-success">
+                    <p>{{ $message }}</p>
+                  </div>
+                @elseif ($message = Session::get('projectDeleteSuccess'))
+                <div class="alert alert-success">
+                  <p>{{ $message }}</p>
+                </div>
+                @elseif ($message = Session::get('projectUpdateSuccess'))
+                <div class="alert alert-success">
+                  <p>{{ $message }}</p>
+                </div>
+                @elseif ($message = Session::get('projectPublishSuccess'))
+                <div class="alert alert-success">
+                  <p>{{ $message }}</p>
+                </div>
+                @elseif ($message = Session::get('projectUnpublishSuccess'))
+                <div class="alert alert-success">
+                  <p>{{ $message }}</p>
+                </div>
+                @endif
+                <!-- END OF MESSAGES -->
+
                 <table class="table align-middle mb-0 bg-white">
                   <thead class="bg-light">
                     <tr>

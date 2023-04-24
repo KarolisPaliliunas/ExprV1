@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\UserProjectLink;
 use App\Models\UserGroupLink;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Validation\ValidationException;
 
 class UserGroupController extends Controller
 {
@@ -42,18 +43,31 @@ class UserGroupController extends Controller
      * @param  \App\Http\Requests\StoreUserGroupRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
+        //validate
+        $request->validate([
+            'name' => 'required|min:3|max:255',
+            'description' => 'required',
+            'groupJoinCode' => 'required|min:3|max:50|unique'   
+        ]);
+
         //setup
+        $currentUserID = Auth::user()->id;
+
         $newGroup = new UserGroup();
         $newGroup->name = $request->name;
         $newGroup->description = $request->description;
         $newGroup->group_join_code = $request->groupJoinCode;
         $newGroup->user_created_id = Auth::user()->id;
 
+        $newUserGroupLink = new UserGroupLink();
+        $newUserGroupLink->user_id = $currentUserID;
+        $newUserGroupLink->user_group_id = $newGroup->id;
+
         //action
+        $newUserGroupLink->save();
         $newGroup->save();
-        return redirect()->route('ugroups.list');
+        return redirect()->route('ugroups.list')->with('groupCreateSuccess', __('GroupCreateSuccess'));
     }
 
     /**
@@ -98,8 +112,14 @@ class UserGroupController extends Controller
      * @param  \App\Models\UserGroup  $userGroup
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user_group_id)
-    {
+    public function update(Request $request, $user_group_id){
+        //validate
+        $request->validate([
+            'name' => 'required|min:3|max:255',
+            'description' => 'required',
+            'joinCode' => 'required|min:3|max:50|unique'    
+        ]);
+        
         //setup
         $userGroupToUpdate = UserGroup::find($user_group_id);
 
@@ -110,7 +130,7 @@ class UserGroupController extends Controller
         //action
         $userGroupToUpdate->update(['name' => $nameToUpate, 'description' => $descriptionToUpate, 'group_join_code' => $groupJoinCodeToUpdate]);
 
-        return redirect()->route('ugroups.list');
+        return redirect()->route('ugroups.list')->with('groupUpdateSuccess', __('GroupUpdateSuccess'));
     }
 
     /**
@@ -119,13 +139,21 @@ class UserGroupController extends Controller
      * @param  \App\Models\UserGroup  $userGroup
      * @return \Illuminate\Http\Response
      */
-    public function destroy($user_group_id)
-    {
+    public function destroy($user_group_id){
+        //validate
+        $noUsers = $this->validateNoUsersinGroup($user_group_id);
+        if ($noUsers == false)
+            throw ValidationException::withMessages(['NoFieldName' => __('GroupHasUsers')]);
+
         //setup
         $userGroupToDestroy = UserGroup::find($user_group_id);
+        $userGroupLinkToDestroy = UserGroupLink::select()
+        ->where('user_group_id', $user_group_id)
+        ->first();
 
         //action
         $userGroupToDestroy->delete();
+        $userGroupLinkToDestroy->delete();
         return redirect()->route('ugroups.list');
     }
 
@@ -138,7 +166,7 @@ class UserGroupController extends Controller
 
 
         //action
-        return view('user-group-user-list', ['userGroup' => $userGroup, 'userList' => $userList, 'ownerId' => $ownerId]);
+        return view('user-group-user-list', ['userGroup' => $userGroup, 'userList' => $userList, 'ownerId' => $ownerId])->with('groupDeleteSuccess', __('GroupDeleteSuccess'));
     }
 
     public function joinGroupView(){
@@ -147,6 +175,11 @@ class UserGroupController extends Controller
     }
 
     public function joinGroup(Request $request){
+        //$validate
+        $request->validate([
+            'joinCode' => 'required'    
+        ]);
+        
         //setup
         $userGroup = null;
         $joinCode = $request->joinCode;
@@ -164,10 +197,10 @@ class UserGroupController extends Controller
             $newLink->user_id = $currentUserID;
             $newLink->save();
             
-            return redirect()->route('ugroups.list');
+            return redirect()->route('ugroups.list')->with('groupJoinSuccess', __('GroupJoinSuccess'));
         }
         else{
-            return redirect()->route('ugroups.joinGroupView');
+            throw ValidationException::withMessages(['NoFieldName' => __('GroupJoinFail')]);
         }
     }
 
@@ -211,6 +244,16 @@ class UserGroupController extends Controller
             })->count();
         
         return $numberofUsers;
+    }
+
+    //customValidators
+    public function validateNoUsersinGroup($user_group_id){
+        $noUsers = true;
+        $userList = $this->getUsersByGroup($user_group_id);
+
+        if (sizeof($userList)>1) // mainUser
+            $noUsers = false;
+        return $noUsers;
     }
 
 }
