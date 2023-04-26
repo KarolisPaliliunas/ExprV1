@@ -30,7 +30,7 @@
 
                 <!-- Join code input -->
                 <div class="form-outline mb-4">
-                    <input type="text" name="groupJoinCode" id="joinCodeInput" class="form-control" value="{{ $userGroupToEdit->group_join_code }}" />
+                    <input type="text" name="group_join_code" id="joinCodeInput" class="form-control" value="{{ $userGroupToEdit->group_join_code }}" />
                     <label class="form-label" for="joinCodeInput">{{__("Join code")}}</label>
                 </div>
 
@@ -61,7 +61,7 @@
 
                 <!-- Join code input -->
                 <div class="form-outline mb-4">
-                    <input type="text" name="groupJoinCode" id="joinCodeInput" class="form-control" />
+                    <input type="text" name="group_join_code" id="joinCodeInput" class="form-control" />
                     <label class="form-label" for="joinCodeInput">{{__("Join code")}}</label>
                 </div>
 
@@ -74,6 +74,10 @@
                 <button type="submit" class="btn btn-outline-success form-control">{{__("Create new group")}}</button>
             </form>
             @endempty
+            <form method="get" action="{{ route('ugroups.list') }}">
+                @csrf
+                <button type="submit" class="btn btn-outline-danger form-control mt-3">{{ __('Cancel') }}</button>
+            </form>
         </div>
     </div>
 </x-wrapper-layout>

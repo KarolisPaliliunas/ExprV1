@@ -45,10 +45,11 @@ class UserGroupController extends Controller
      */
     public function store(Request $request){
         //validate
+        //dd('NAME: '.$request->name.'  desc: '.$request->description.'  joincode: '.$request->groupJoinCode);
         $request->validate([
             'name' => 'required|min:3|max:255',
             'description' => 'required',
-            'groupJoinCode' => 'required|min:3|max:50|unique'   
+            'group_join_code' => 'required|min:3|max:50|unique:user_groups'   
         ]);
 
         //setup
@@ -57,16 +58,17 @@ class UserGroupController extends Controller
         $newGroup = new UserGroup();
         $newGroup->name = $request->name;
         $newGroup->description = $request->description;
-        $newGroup->group_join_code = $request->groupJoinCode;
+        $newGroup->group_join_code = $request->group_join_code;
         $newGroup->user_created_id = Auth::user()->id;
+        $newGroup->save();
 
         $newUserGroupLink = new UserGroupLink();
         $newUserGroupLink->user_id = $currentUserID;
         $newUserGroupLink->user_group_id = $newGroup->id;
 
         //action
+        
         $newUserGroupLink->save();
-        $newGroup->save();
         return redirect()->route('ugroups.list')->with('groupCreateSuccess', __('GroupCreateSuccess'));
     }
 

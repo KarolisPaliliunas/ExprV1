@@ -22,13 +22,9 @@
                     @foreach ($userList as $user)
                     <tr>
                         <td>{{ $user->name }}</td>
-                        @if ($user->id = $ownerId)
+                        @if ($user->id == $ownerId)
                         <td>{{ __('Owner') }}</td>
                         <td>
-                            <form method="post" action="{{ route('ugroups.removeUser', ['user_group_id' => $userGroup->id, 'user_id' => $user->id]) }}">
-                            @csrf
-                                <button type="submit" class="btn btn-outline-danger ms-1">{{ __('RemoveFromGroup') }}</button>
-                            </form>
                         </td>
                         @else
                         <td>{{ __('Member') }}</td>

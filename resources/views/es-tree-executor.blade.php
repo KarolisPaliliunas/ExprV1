@@ -16,7 +16,7 @@
         @foreach ($values as $value)
             <form method="get" action ="{{ route('project.execute', ['project_id' => $project->id, 'currentAttributeId' => $attribute['id'], 'pickedValueId' => $value['id']]) }}">
             @csrf
-                <button class="btn btn-primary btn-lg" type="submit">{{ $value['description'] }}</button>
+                <button class="btn btn-outline-primary btn-lg" type="submit">{{ $value['description'] }}</button>
             </form>
         @endforeach
         </div>
