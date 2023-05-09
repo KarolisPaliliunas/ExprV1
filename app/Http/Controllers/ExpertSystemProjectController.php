@@ -810,7 +810,8 @@ class ExpertSystemProjectController extends Controller
                     $currentItemId = $keyValue;
                 if($key == 'type' && $keyValue == 20){ // if value
                     $conclusion = $this->getConclusion($currentItemId);
-                    if(empty($conclusion))
+                    $value = $this->getAttributeByValue($currentItemId); // NOT ENOUGH
+                    if(empty($conclusion) && empty($value)) // NOT ENOUGH (jei bus tik 1 attr ano value ir anuo attr.)
                         $counter++;
                 }
                 if($key == 'type' && $keyValue == 10){ // if attribute
