@@ -3,7 +3,7 @@
     <div style="margin-left:90%;">
         <form method="get" action="{{ route('project.list') }}">
             @csrf
-            <button type="submit" class="btn btn-outline-danger form-control mb-1 w-auto">{{ __('BackToList') }}</button>
+            <button type="submit" class="btn btn-outline-danger form-control mb-1 w-auto">{{ __('messages.backToListButtonLabel') }}</button>
         </form>
     </div>
 
@@ -13,7 +13,7 @@
             <form method="post" action="{{ route('project.unassignSelectedUsers') }}">
             @csrf
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-5">
-                    {{ __('NowUnassigningUsersFor') }} {{ $project->name }} {{ __('SelectUsersAndUnassign') }}
+                    {{ __('messages.unassigningForProjectLabel') }} {{ $project->name }} {{ __('messages.selectUsersProjectLabel') }}
                 </h2>
 
                 @isset($userList)
@@ -26,11 +26,11 @@
                     @endforeach
                     <input type="hidden" name="project_id" value="{{ $project->id }}">
                 </div>
-                <button type="submit" class="btn btn-outline-success form-control w-auto">{{__("UnassignSelected")}}</button>
+                <button type="submit" class="btn btn-outline-success form-control w-auto">{{__("messages.unassignSelectedUsersProjectButtonLabel")}}</button>
                 @endisset
                 @empty($userList)
                 <div class="alert alert-danger" role="alert">
-                    {{ __('NoUsersAssigned') }}
+                    {{ __('messages.noUsersToUnassignProjectlabel') }}
                 </div>
                 @endempty
             </form>

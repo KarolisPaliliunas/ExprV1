@@ -7,6 +7,7 @@ use App\Http\Controllers\ExpertSystemValueController;
 use App\Http\Controllers\ExpertSystemConclusionController;
 use App\Http\Controllers\UserGroupController;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,10 +20,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+$userLocale = 'lt';
+
+App::setLocale($userLocale);
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('dashboard');
+})->middleware(['auth', 'verified']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -95,3 +99,5 @@ Route::middleware(['auth', 'verified'])->group(function ($project_id = null) {
 
 //Auth routes (include)
 require __DIR__.'/auth.php';
+
+?>

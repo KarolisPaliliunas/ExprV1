@@ -1,7 +1,7 @@
 <x-wrapper-layout>
   <form method="get" action="{{ route('project.list') }}">
     @csrf
-    <button type="submit" class="btn btn-outline-danger form-control" style="width:auto; margin-left:90%">{{ __('BackToList') }}</button>
+    <button type="submit" class="btn btn-outline-danger form-control" style="width:auto; margin-left:90%">{{ __('messages.backToListButtonLabel') }}</button>
   </form>
   @isset ($project->id)
   @isset ($projectTree)
@@ -18,14 +18,14 @@
           @csrf
           <div>
             <div class="row">
-              <label for="name1" class="form-label">{{ __('Your system is empty! Lets create a header attribute') }}</label>
+              <label for="name1" class="form-label">{{ __('messages.emptyProjectLabel') }}</label>
             </div>
             <div class="row">
-              <input type="text" placeholder="{{ __('Main attribute name') }}" name="name">
-              <input type="text" placeholder="{{ __('Main attribute description') }}" name="description">
+              <input type="text" placeholder="{{ __('messages.mainAttributeNameLabel') }}" name="name">
+              <input type="text" placeholder="{{ __('message.mainAttributeDescriptionLabel') }}" name="description">
             </div>
             <div class="row">
-              <button type="submit" class="btn btn-outline-success form-control">{{ __('Create') }}</button>
+              <button type="submit" class="btn btn-outline-success form-control">{{ __('messages.createButtonLabel') }}</button>
             </div>
           </div>
         </form>

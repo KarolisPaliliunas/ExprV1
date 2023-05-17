@@ -3,7 +3,7 @@
     <div style="margin-left:90%;">
         <form method="get" action="{{ route('ugroups.list') }}">
             @csrf
-            <button type="submit" class="f-n-hover btn btn-outline-danger btn-raised px-4 py-25 w-75 text-600">{{ __('BackToList') }}</button>
+            <button type="submit" class="f-n-hover btn btn-outline-danger btn-raised px-4 py-25 w-75 text-600">{{ __('messages.backToListButtonLabel') }}</button>
         </form>
     </div>
 
@@ -13,9 +13,9 @@
             <table class="table mb-4">
                 <thead>
                     <tr>
-                        <th scope="col">{{ __('UserName')}}</th>
-                        <th scope="col">{{__('Role')}}</th>
-                        <th scope="col">{{__('Actions')}}</th>
+                        <th scope="col">{{ __('messages.groupUserListNameLabel')}}</th>
+                        <th scope="col">{{__('messages.groupUserListRoleLabel')}}</th>
+                        <th scope="col">{{__('messages.groupUserListActionsLabel')}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -23,15 +23,15 @@
                     <tr>
                         <td>{{ $user->name }}</td>
                         @if ($user->id == $ownerId)
-                        <td>{{ __('Owner') }}</td>
+                        <td>{{ __('messages.groupUserListOwnerLabel') }}</td>
                         <td>
                         </td>
                         @else
-                        <td>{{ __('Member') }}</td>
+                        <td>{{ __('messages.groupUserListMemberLabel') }}</td>
                         <td>
                             <form method="post" action="{{ route('ugroups.removeUser', ['user_id' => $user->id, 'user_group_id' => $userGroup->id ]) }}">
                                 @csrf
-                                <button type="submit" class="btn btn-outline-danger ms-1">{{ __('RemoveFromGroup') }}</button>
+                                <button type="submit" class="btn btn-outline-danger ms-1">{{ __('messages.groupuserListRemoveFromGroupButtonLabel') }}</button>
                             </form>
                         </td>
                         @endif

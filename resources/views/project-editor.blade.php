@@ -16,17 +16,17 @@
       @csrf
           <div class="form-outline mb-4">
             <input type="text" class="form-control" value="{{ $projectToEdit->name }}" name="name" id="nameInput">
-            <label class="form-label" for="nameInput">{{__("Project name")}}</label>
+            <label class="form-label" for="nameInput">{{__("messages.projectNameLabel")}}</label>
           </div>
           <div class="form-outline mb-4">
             <input type="text" class="form-control" value="{{ $projectToEdit->description }}" name="description" id="descriptionInput">
-            <label class="form-label" for="descriptionInput">{{__("Project description")}}</label>
+            <label class="form-label" for="descriptionInput">{{__("messages.projectDescriptionLabel")}}</label>
           </div>
-          <button type="submit" class="btn btn-outline-success form-control">{{ __('SaveChanges') }}</button>
+          <button type="submit" class="btn btn-outline-success form-control">{{ __('messages.saveButtonLabel') }}</button>
       </form>
       <form method="get" action="{{ route('project.list') }}">
           @csrf
-          <button type="submit" class="btn btn-outline-danger form-control mt-3">{{ __('Cancel') }}</button>
+          <button type="submit" class="btn btn-outline-danger form-control mt-3">{{ __('messages.cancelButtonLabel') }}</button>
       </form>
       @endisset
       @empty ($projectToEdit)
@@ -34,17 +34,17 @@
       @csrf
       <div class="form-outline mb-4">
             <input type="text" class="form-control" name="name" id="nameInput">
-            <label class="form-label" for="nameInput">{{__("Project name")}}</label>
+            <label class="form-label" for="nameInput">{{__("messages.projectNameLabel")}}</label>
           </div>
           <div class="form-outline mb-4">
             <input type="text" class="form-control" name="description" id="descriptionInput">
-            <label class="form-label" for="descriptionInput">{{__("Project description")}}</label>
+            <label class="form-label" for="descriptionInput">{{__("messages.projectDescriptionLabel")}}</label>
           </div>
-          <button type="submit" class="btn btn-outline-success form-control">{{ __('Create') }}</button>
+          <button type="submit" class="btn btn-outline-success form-control">{{ __('messages.createButtonLabel') }}</button>
       </form>
       <form method="get" action="{{ route('project.list') }}">
           @csrf
-          <button type="submit" class="btn btn-outline-danger form-control mt-3">{{ __('Cancel') }}</button>
+          <button type="submit" class="btn btn-outline-danger form-control mt-3">{{ __('messages.cancelButtonLabel') }}</button>
       </form>
       @endempty
 </x-wrapper-layout>

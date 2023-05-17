@@ -3,7 +3,7 @@
     <div style="margin-left:90%;">
         <form method="get" action="{{ route('ugroups.list') }}">
             @csrf
-            <button type="submit" class="btn btn-outline-danger form-control mb-1 w-auto">{{ __('BackToList') }}</button>
+            <button type="submit" class="btn btn-outline-danger form-control mb-1 w-auto">{{ __('messages.backToListButtonLabel') }}</button>
         </form>
     </div>
 
@@ -25,11 +25,11 @@
 
                 @csrf
                 <!-- Code input -->
-                <label class="form-label" for="joinCodeInput">{{__("EnterAValidGroupJoinCode")}}</label>
+                <label class="form-label" for="joinCodeInput">{{__("messages.enterValidGroupCodeLabel")}}</label>
                 <div class="form-outline mb-4 input-group">
                     <input type="text" name="joinCode" id="joinCodeInput" class="form-control w-60" />
                     <div class="input-group-prepend">
-                        <button type="submit" class="btn btn-outline-success form-control w-auto">{{__("JoinGoup")}}</button>
+                        <button type="submit" class="btn btn-outline-success form-control w-auto">{{__("messages.joinGroupButtonLabel")}}</button>
                     </div>
                 </div>
             </form>

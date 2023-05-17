@@ -31,20 +31,17 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:'.User::class],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $isAdmin = false;
-        if ($request->has('adminCheckbox')) {
-            $isAdmin = true;
-        }
+        $userType = $this->determineUserType(); // 100 - super admin, 0 - user, 1 - admin
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'is_admin' => $isAdmin,
+            'admin_type' => $userType,
             'password' => Hash::make($request->password)
         ]);
 
@@ -53,5 +50,12 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
+    }
+
+    private function determineUserType(){
+        $anyUsers = User::first();
+        if (empty($anyUsers))
+            return 100;
+        else return 0;
     }
 }

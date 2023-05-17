@@ -3,7 +3,7 @@
     <div style="margin-left:90%;">
         <form method="get" action="{{ route('project.list') }}">
             @csrf
-            <button type="submit" class="btn btn-outline-danger form-control mb-1 w-auto">{{ __('BackToList') }}</button>
+            <button type="submit" class="btn btn-outline-danger form-control mb-1 w-auto">{{ __('messages.backToListButtonLabel') }}</button>
         </form>
     </div>
 
@@ -13,7 +13,7 @@
             <form method="post" action="{{ route('project.assignSelectedGroups') }}">
             @csrf
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-5">
-                    {{ __('NowAssigningGroupsFor') }} {{ $project->name }} {{ __('SelectGroupsAndAssign') }}
+                    {{ __('messages.assigningGroupsForProjectLabel') }} {{ $project->name }} {{ __('messages.selectGroupsProjectLabel') }}
                 </h2>
 
                 @isset($groupsListData)
@@ -21,19 +21,19 @@
                     @foreach($groupsListData as $groupData)
                     @if($groupData['numberOfUsersAssignedToProjectInGroup'] < $groupData['numberOfUsersInGroup'])
                     <label class="list-group-item border border-dark mb-2">
-                        {{ $groupData['userGroup']->name }} | {{ __('UsersAssigned') }} {{ $groupData['numberOfUsersAssignedToProjectInGroup'] }}/{{ $groupData['numberOfUsersInGroup'] }}
+                        {{ $groupData['userGroup']->name }} | {{ __('messages.assignedUsersInGroupLabel') }} {{ $groupData['numberOfUsersAssignedToProjectInGroup'] }}/{{ $groupData['numberOfUsersInGroup'] }}
                         <input class="form-check-input me-1" type="checkbox" name="selectedGroupsIdsList[]" value="{{ $groupData['userGroup']->id }}">
                     </label>
                     @else
                     <label class="list-group-item border border-dark mb-2 disabled">
-                        {{ $groupData['userGroup']->name }} | {{ __('GroupIsFullyAssignedOrEmpty') }} 
+                        {{ $groupData['userGroup']->name }} | {{ __('messages.groupFullyAssignedLabel') }} 
                         <input class="form-check-input me-1 disabled" type="checkbox" name="selectedGroupsIdsList[]" value="{{ $groupData['userGroup']->id }}">
                     </label>
                     @endif
                     @endforeach
                     <input type="hidden" name="project_id" value="{{ $project->id }}">
                 </div>
-                <button type="submit" class="btn btn-outline-success form-control w-auto">{{__("AssignForSelected")}}</button>
+                <button type="submit" class="btn btn-outline-success form-control w-auto">{{__("messages.assignSelectedGroupsProjectButtonLabel")}}</button>
                 @endisset
                 @empty($groupsListData)
                 <div class="alert alert-danger" role="alert">

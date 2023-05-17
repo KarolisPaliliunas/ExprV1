@@ -30,15 +30,15 @@ function traverseArray($DataArray, $project_id){
                             <div class="row">
                                 <div class="col">
                                     <div class="col">
-                                        <label for="name1" class="form-label">'.__('Create - Value').'</label>
+                                        <label for="name1" class="form-label">'.__('messages.createValueLabel').'</label>
                                     </div>
-                                    <input type="text" placeholder="'.__('ItemNamePlaceholder').'" name="name">
+                                    <input type="text" placeholder="'.__('messages.itemNamePlaceholder').'" name="name">
                                 </div>
                                 <div class="col">
-                                    <input type="text" placeholder="'.__('ItemDescriptionPlaceholder').'" name="description">
+                                    <input type="text" placeholder="'.__('messages.itemDescriptionPlaceholder').'" name="description">
                                 </div>
                                 <div class="col">
-                                    <button type="submit" class="btn btn-outline-success form-control">'.__('Create').'</button>
+                                    <button type="submit" class="btn btn-outline-success form-control">'.__('messages.createButtonLabel').'</button>
                                 </div>
                             </div>    
                             </form>
@@ -57,7 +57,7 @@ function traverseArray($DataArray, $project_id){
                             <div class="row">
                                 <div class="col">
                                     <div class="col">
-                                        <label for="name1" class="form-label">'.__('Edit - Attribute').'</label>
+                                        <label for="name1" class="form-label">'.__('messages.editAttributeLabel').'</label>
                                     </div>
                                     <input type="text" value="'.$DataArray['name'].'" name="name">
                                 </div>
@@ -65,7 +65,7 @@ function traverseArray($DataArray, $project_id){
                                     <input type="text" value="'.$DataArray['description'].'" name="description">
                                 </div>
                                 <div class="col">
-                                    <button type="submit" class="btn btn-outline-success form-control">'.__('Edit').'</button>
+                                    <button type="submit" class="btn btn-outline-success form-control">'.__('messages.saveButtonLabel').'</button>
                                 </div>
                             </div>
                             </form>
@@ -74,15 +74,15 @@ function traverseArray($DataArray, $project_id){
                             <div class="row">
                                 <div class="col">
                                     <div class="col">
-                                        <label for="name1" class="form-label">'.__('Create - Value').'</label>
+                                        <label for="name1" class="form-label">'.__('messages.createValueLabel').'</label>
                                     </div>
-                                    <input type="text" placeholder="'.__('ItemNamePlaceholder').'" name="name">
+                                    <input type="text" placeholder="'.__('messages.itemNamePlaceholder').'" name="name">
                                 </div>
                                 <div class="col">
-                                    <input type="text" placeholder="'.__('ItemDescriptionPlaceholder').'" name="description">
+                                    <input type="text" placeholder="'.__('messages.itemDescriptionPlaceholder').'" name="description">
                                 </div>
                                 <div class="col">
-                                    <button type="submit" class="btn btn-outline-success form-control">'.__('Create').'</button>
+                                    <button type="submit" class="btn btn-outline-success form-control">'.__('messages.createButtonLabel').'</button>
                                 </div>
                             </div>    
                             </form>
@@ -104,15 +104,15 @@ function traverseArray($DataArray, $project_id){
                             <div class="row">
                                 <div class="col">
                                     <div class="col">
-                                        <label for="name1" class="form-label">'.__('Create - Conclusion').'</label>
+                                        <label for="name1" class="form-label">'.__('messages.createConclusionLabel').'</label>
                                     </div>
-                                        <input type="text" placeholder="'.__('ItemNamePlaceholder').'" name="name">
+                                        <input type="text" placeholder="'.__('messages.itemNamePlaceholder').'" name="name">
                                     </div>
                                 <div class="col">
-                                    <input type="text" placeholder="'.__('ItemDescriptionPlaceholder').'" name="description">
+                                    <input type="text" placeholder="'.__('messages.itemDescriptionPlaceholder').'" name="description">
                                 </div>
                                 <div class="col">
-                                    <button type="submit" class="btn btn-outline-success form-control">'.__('Create').'</button>
+                                    <button type="submit" class="btn btn-outline-success form-control">'.__('messages.createButtonLabel').'</button>
                                 </div>
                             </div>    
                             </form>
@@ -124,17 +124,17 @@ function traverseArray($DataArray, $project_id){
                                     <div class="row">
                                         <div class="col">
                                             <div class="col">
-                                                <label for="name1" class="form-label">'.__('Create - Attribute').'</label>
+                                                <label for="name1" class="form-label">'.__('messages.createAttributeLabel').'</label>
                                             </div>
                                             <div class="col">
-                                            <input type="text" placeholder="'.__('ItemNamePlaceholder').'" name="name">
+                                            <input type="text" placeholder="'.__('messages.itemNamePlaceholder').'" name="name">
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <input type="text" placeholder="'.__('ItemDescriptionPlaceholder').'" name="description">
+                                            <input type="text" placeholder="'.__('messages.itemDescriptionPlaceholder').'" name="description">
                                         </div>
                                         <div class="col">
-                                            <button type="submit" class="btn btn-outline-success form-control">'.__('Create').'</button>    
+                                            <button type="submit" class="btn btn-outline-success form-control">'.__('messages.createButtonLabel').'</button>    
                                         </div>
                                     </div>    
                                 </form>
@@ -155,7 +155,7 @@ function traverseArray($DataArray, $project_id){
                             <div class="row">
                                 <div class="col">
                                     <div class="col">
-                                        <label for="name1" class="form-label">'.__('Edit - Value').'</label>
+                                        <label for="name1" class="form-label">'.__('messages.editValueLabel').'</label>
                                     </div>
                                         <input type="text" value="'.$DataArray['name'].'" name="name">
                                     </div>
@@ -163,7 +163,7 @@ function traverseArray($DataArray, $project_id){
                                     <input type="text" value="'.$DataArray['description'].'" name="description">
                                 </div>
                                 <div class="col">
-                                    <button type="submit" class="btn btn-outline-success form-control">'.__('Edit').'</button>
+                                    <button type="submit" class="btn btn-outline-success form-control">'.__('messages.saveButtonLabel').'</button>
                                 </div>
                             </div>    
                             </form>
@@ -178,13 +178,13 @@ function traverseArray($DataArray, $project_id){
                         </div>';
                         }
                         break;
-                        case 30:    
+                        case 30: /////////////////////////////CONCLUSION   
                         echo   '<form method="post" action="'.route('conclusion.update', ['item_id'=>$DataArray['id'], 'project_id'=>$project_id]).'">
                         <input type="hidden" name="_token" value="'.csrf_token().'" /> 
                         <div class="row">
                             <div class="col">
                                 <div class="col">
-                            <label for="name1" class="form-label">'.__('Edit - Conclusion').'</label>
+                            <label for="name1" class="form-label">'.__('messages.editConclusionLabel').'</label>
                         </div>
                         <input type="text" value="'.$DataArray['name'].'" name="name">
                         </div>
@@ -192,7 +192,7 @@ function traverseArray($DataArray, $project_id){
                             <input type="text" value="'.$DataArray['description'].'" name="description">
                         </div>
                             <div class="col">
-                                <button type="submit" class="btn btn-outline-success form-control">'.__('Edit').'</button>    
+                                <button type="submit" class="btn btn-outline-success form-control">'.__('messages.saveButtonLabel').'</button>    
                             </div>
                         </div>    
                         </form>

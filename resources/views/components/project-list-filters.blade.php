@@ -9,9 +9,9 @@
             <select class="form-select" name="filterTypeValue">
             @foreach(\App\Enums\ProjectFilterEnum::cases() as $filterType)
               @if ($filterTypeValue == $filterType->value)
-              <option selected value="{{$filterType->value}}">{{ __($filterType->name) }} VALUE {{$filterType->value}}</option>
+              <option selected value="{{$filterType->value}}">{{ __('messages.'.$filterType->name) }}</option>
               @else
-              <option value="{{$filterType->value}}">{{ __($filterType->name) }} VALUE {{$filterType->value}}</option>
+              <option value="{{$filterType->value}}">{{ __('messages.'.$filterType->name) }}</option>
               @endif
             @endforeach
             </select>
@@ -26,7 +26,7 @@
         @endempty
         </div>
         <div class="mb-4 col-sm-6">
-            <input type="submit" class="btn btn-outline-primary mb-2" value="{{ __('Search') }}"></input>
+            <input type="submit" class="btn btn-outline-primary mb-2" value="{{ __('messages.filtersSearchButton') }}"></input>
         </div>
     </div>    
 </form>

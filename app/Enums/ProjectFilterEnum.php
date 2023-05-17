@@ -3,11 +3,11 @@
 namespace App\Enums;
  
 enum ProjectFilterEnum:int {
-    case projectsMy = 10;
-    case projectsPublished = 20;
-    case projectsForMe = 30;
-    case projectsInGroup = 40;
-    case projectsAll = 50;
+    case myFilterLabel = 10;
+    case publishedFilterLabel = 20;
+    case assignedFilterLabel = 30;
+    //case projectsInGroup = 40;
+    case allFilterLabel = 50;
 }
 
 

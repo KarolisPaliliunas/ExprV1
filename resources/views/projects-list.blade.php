@@ -9,10 +9,10 @@
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="row">
           <div class="p-6 text-gray-900 mb-4 col-sm-3">
-            {{ __("Projects") }}
+            {{ __("messages.projectsLabel") }}
           </div>
           <div class="p-6 text-gray-900 mb-4 col-sm-3">
-            <a class="btn btn-success" href="{{ route('project.create', ['filterType'=>$filterTypeValue, 'filterValue'=>$filterSearchValue]) }}">{{ __('Create new project') }}</a>
+            <a class="btn btn-success" href="{{ route('project.create', ['filterType'=>$filterTypeValue, 'filterValue'=>$filterSearchValue]) }}">{{ __('messages.createProjectButtonLabel') }}</a>
           </div>
         </div>
 
@@ -52,11 +52,11 @@
         <table class="table align-middle mb-0 bg-white">
           <thead class="bg-light">
             <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Created By</th>
-              <th>Date Created</th>
-              <th>Actions</th>
+              <th>{{ __('messages.projectNameLabel') }}</th>
+              <th>{{ __('messages.projectDescriptionLabel') }}</th>
+              <th>{{ __('messages.projectCreatedByLabel') }}</th>
+              <th>{{ __('messages.projectCreatedDateLabel') }}</th>
+              <th>{{ __('messages.projectActionsLabel') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -74,7 +74,7 @@
                       </svg>
                       @endif
                     </p>
-                    <p class="text-muted mb-0">{{__("Expert system project")}}</p>
+                    <p class="text-muted mb-0">{{__("messages.expertSystemProjectLabel")}}</p>
                   </div>
                 </div>
               </td>
@@ -92,7 +92,7 @@
                   <div class="p-2 bd-highlight">
                     <form method="get" action="{{ route('project.edit', ['project_id'=>$project->id, 'filterType'=>$filterTypeValue, 'filterValue'=>$filterSearchValue]) }}">
                       @csrf
-                      <h1><button type="submit"><i class="bi bi-pencil" style="font-size: 30px;"></i></button></h1>
+                      <button type="submit"><i class="bi bi-pencil" style="font-size: 30px;"></i></button>
                     </form>
                   </div>
                   <div class="p-2 bd-highlight">

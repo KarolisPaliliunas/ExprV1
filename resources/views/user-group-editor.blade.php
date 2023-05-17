@@ -19,28 +19,28 @@
                 <!-- Name input -->
                 <div class="form-outline mb-4">
                     <input type="text" name="name" id="nameInput" class="form-control" value="{{ $userGroupToEdit->name }}" />
-                    <label class="form-label" for="nameInput">{{__("Group name")}}</label>
+                    <label class="form-label" for="nameInput">{{__("messages.groupNameLabel")}}</label>
                 </div>
 
                 <!-- Description input -->
                 <div class="form-outline mb-4">
                     <input type="text" name="description" id="descriptionInput" class="form-control" value="{{ $userGroupToEdit->description }}" />
-                    <label class="form-label" for="descriptionInput">{{__("Group description")}}</label>
+                    <label class="form-label" for="descriptionInput">{{__("messages.groupDescriptionLabel")}}</label>
                 </div>
 
                 <!-- Join code input -->
                 <div class="form-outline mb-4">
                     <input type="text" name="group_join_code" id="joinCodeInput" class="form-control" value="{{ $userGroupToEdit->group_join_code }}" />
-                    <label class="form-label" for="joinCodeInput">{{__("Join code")}}</label>
+                    <label class="form-label" for="joinCodeInput">{{__("messages.groupJoinCodeLabel")}}</label>
                 </div>
 
                 <!-- Reneration Button -->
                 <div class="form-check d-flex justify-content-center mb-4">
-                    <input type="button" value="Random!" onclick="generateGroupCode();" />
+                    <input type="button" value="{{ __('messages.generateJoinCodeButtonLabel') }}" onclick="generateGroupCode();" />
                 </div>
 
                 <!-- Submit button -->
-                <button type="submit" class="btn btn-outline-success form-control">{{__("Edit group")}}</button>
+                <button type="submit" class="btn btn-outline-success form-control">{{__("messages.saveButtonLabel")}}</button>
             </form>
             @endisset
             @empty ($userGroupToEdit)
@@ -50,33 +50,33 @@
                 <!-- Name input -->
                 <div class="form-outline mb-4">
                     <input type="text" name="name" id="nameInput" class="form-control" />
-                    <label class="form-label" for="nameInput">{{__("Group name")}}</label>
+                    <label class="form-label" for="nameInput">{{__("messages.groupNameLabel")}}</label>
                 </div>
 
                 <!-- Description input -->
                 <div class="form-outline mb-4">
                     <input type="text" name="description" id="descriptionInput" class="form-control" />
-                    <label class="form-label" for="descriptionInput">{{__("Group description")}}</label>
+                    <label class="form-label" for="descriptionInput">{{__("messages.groupDescriptionLabel")}}</label>
                 </div>
 
                 <!-- Join code input -->
                 <div class="form-outline mb-4">
                     <input type="text" name="group_join_code" id="joinCodeInput" class="form-control" />
-                    <label class="form-label" for="joinCodeInput">{{__("Join code")}}</label>
+                    <label class="form-label" for="joinCodeInput">{{__("messages.groupJoinCodeLabel")}}</label>
                 </div>
 
                 <!-- Reneration Button -->
                 <div class="form-check d-flex justify-content-center mb-4">
-                    <input type="button" value="Random!" onclick="generateGroupCode();" />
+                    <input type="button" value="{{ __('messages.generateJoinCodeButtonLabel') }}" onclick="generateGroupCode();" />
                 </div>
 
                 <!-- Submit button -->
-                <button type="submit" class="btn btn-outline-success form-control">{{__("Create new group")}}</button>
+                <button type="submit" class="btn btn-outline-success form-control">{{__("messages.createButtonLabel")}}</button>
             </form>
             @endempty
             <form method="get" action="{{ route('ugroups.list') }}">
                 @csrf
-                <button type="submit" class="btn btn-outline-danger form-control mt-3">{{ __('Cancel') }}</button>
+                <button type="submit" class="btn btn-outline-danger form-control mt-3">{{ __('messages.cancelButtonLabel') }}</button>
             </form>
         </div>
     </div>
