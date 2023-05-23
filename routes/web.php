@@ -5,10 +5,16 @@ use App\Http\Controllers\ExpertSystemProjectController;
 use App\Http\Controllers\ExpertSystemAttributeController;
 use App\Http\Controllers\ExpertSystemValueController;
 use App\Http\Controllers\ExpertSystemConclusionController;
+use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\UserGroupController;
+use App\Http\Controllers\UserSetupController;
+use App\Models\User;
+use App\Models\UserSetup;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,9 +26,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-$userLocale = 'lt';
-
-App::setLocale($userLocale);
 
 Route::get('/', function () {
     return view('dashboard');
@@ -32,7 +35,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -95,6 +98,23 @@ Route::middleware(['auth', 'verified'])->group(function ($project_id = null) {
     Route::post('/user-group-join/create-link', [UserGroupController::class, 'joinGroup'])->name('ugroups.joinGroup');
     Route::get('/user-group-join', [UserGroupController::class, 'joinGroupView'])->name('ugroups.joinGroupView');
     Route::post('/user-group/{user_group_id}/remove-user/{user_id}', [UserGroupController::class, 'removeUserFromGroup'])->name('ugroups.removeUser');
+});
+
+//Settings
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/settings', [UserSetupController::class, 'show'])->name('settings.show');
+    Route::post('/settings-update/{userSetup}', [UserSetupController::class, 'update'])->name('settings.update');
+});
+
+//Localization
+Route::get('en', function() {
+    session(['locale' => 'en']);
+    return back();
+});
+
+Route::get('lt', function() {
+    session(['locale' => 'lt']);
+    return back();
 });
 
 //Auth routes (include)

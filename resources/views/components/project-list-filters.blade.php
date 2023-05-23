@@ -1,5 +1,5 @@
 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-{{ __('Filters') }}
+{{ __('messages.filtersLabel') }}
 </h2>
 
 <form method="POST" action="{{ route('project.listFiltered') }}">

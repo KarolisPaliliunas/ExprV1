@@ -115,11 +115,11 @@ class UserGroupController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $user_group_id){
-        //validate
+        //validate       
         $request->validate([
             'name' => 'required|min:3|max:255',
             'description' => 'required',
-            'joinCode' => 'required|min:3|max:50|unique'    
+            //'group_join_code' => 'required|min:3|max:50|unique:user_groups'    
         ]);
         
         //setup
@@ -127,7 +127,7 @@ class UserGroupController extends Controller
 
         $nameToUpate = $request->name;
         $descriptionToUpate = $request->description;
-        $groupJoinCodeToUpdate = $request->groupJoinCode;
+        $groupJoinCodeToUpdate = $request->group_join_code;
 
         //action
         $userGroupToUpdate->update(['name' => $nameToUpate, 'description' => $descriptionToUpate, 'group_join_code' => $groupJoinCodeToUpdate]);

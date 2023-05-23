@@ -21,6 +21,8 @@ return [
     //authentication
     'usernameLabel' => 'Name',
     'passwordLabel' => 'Password',
+    'oldPasswordLabel' => 'Current Password',
+    'newPasswordLabel' => 'New Password',
     'confirmPasswordLabel' => 'Confirm Password',
     'emailLabel' => 'Email',
     'registerButtonLabel' => 'Register',
@@ -97,5 +99,34 @@ return [
    'groupUserListOwnerLabel' => 'Owner',
    'groupUserListMemberLabel' => 'Member',
    'groupuserListRemoveFromGroupButtonLabel' => 'Remove From Group',
+
+   //profile
+   'profileLabel' => 'Profile',
+   'profileInformationLabel' => 'Profile Information',
+   'updateYourProfileLabel' => "Update your account's profile information.",
+   'updatePasswordLabel' => 'Update Password',
+   'updateYourPasswordLabel' => 'Ensure your account is using a long, random password to stay secure.',
+
+   //settings
+   'settingsLabel' => 'Settings',
+   'generalSettingslabel' => 'General Settings',
+   'generalSettingsInfolabel' => 'Here you can update general settings of the system.',
+   'navigationColorSettingLabel' => 'Navigation Color',
+   'navigationFontSettingLabel' => 'Navigation Font',
+   'langSettingLabel' => 'Language',
+   'settingsUserListButtonlabel' => 'System Users',
+
+   //aditional
+   'navColorBlue' => 'Blue (Standard)',
+   'navColorGreen' => 'Green',
+   'navColorRed' => 'Red',
+   'navColorBrown' => 'Brown',
+
+   'navFontArial' => 'Arial (Standard)',
+   'navFontTNR' => 'Times New Roman',
+   'navFontHelvetica' => 'Helvetica',
+
+   'langEnglish' => 'English',
+   'langLithuanian' => 'Lithuanian',
 ]
 ?>

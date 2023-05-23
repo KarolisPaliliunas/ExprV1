@@ -21,6 +21,8 @@ return [
     //authentication
     'usernameLabel' => 'Vardas',
     'passwordLabel' => 'Slaptažodis',
+    'oldPasswordLabel' => 'Dabartinis Slaptažodis',
+    'newPasswordLabel' => 'Naujas Slaptažodis',
     'confirmPasswordLabel' => 'Patvirtinti Slaptažodį',
     'emailLabel' => 'El. Paštas',
     'registerButtonLabel' => 'Registruotis',
@@ -97,5 +99,34 @@ return [
    'groupUserListOwnerLabel' => 'Sąvininkas',
    'groupUserListMemberLabel' => 'Narys',
    'groupuserListRemoveFromGroupButtonLabel' => 'Pašalinti iš Grupės',
+
+    //profile
+    'profileLabel' => 'Profilis',
+    'profileInformationLabel' => 'Profilio Informacija',
+    'updateYourProfileLabel' => "Atnaujinti jūsų paskyros profilio informaciją.",
+    'updatePasswordLabel' => 'Atnaujinti Slaptažodį',
+    'updateYourPasswordLabel' => 'Įsitikinkite, kad jūsų paskyra naudoja ilgą ir atsitiktinį slaptažodį, kad išliktų saugi.',
+
+    //settings
+   'settingsLabel' => 'Nustatymai',
+   'generalSettingslabel' => 'Bendriniai Nustatymai',
+   'generalSettingsInfolabel' => 'Čia galima pakeisti bendrinius sistemos nustatymus. ',
+   'navigationColorSettingLabel' => 'Navigacijos Spalva',
+   'navigationFontSettingLabel' => 'Navigacijos Šriftas',
+   'langSettingLabel' => 'Kalba',
+   'settingsUserListButtonlabel' => 'Sistemos Vartotojai',
+
+    //additional
+   'navColorBlue' => 'Mėlyna (Standartinė)',
+   'navColorGreen' => 'Žalia',
+   'navColorRed' => 'Raudona',
+   'navColorBrown' => 'Ruda',
+
+   'navFontArial' => 'Arial (Standartinis)',
+   'navFontTNR' => 'Times New Roman',
+   'navFontHelvetica' => 'Helvetica',
+
+   'langEnglish' => 'Anglų',
+   'langLithuanian' => 'Lietuvių',
 ]
 ?>

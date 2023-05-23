@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\UserSetup;
 use App\Http\Requests\StoreUserSetupRequest;
 use App\Http\Requests\UpdateUserSetupRequest;
+use Illuminate\Http\Request;
+//ADDED
+use Illuminate\Support\Facades\Auth;
 
 class UserSetupController extends Controller
 {
@@ -45,9 +48,12 @@ class UserSetupController extends Controller
      * @param  \App\Models\UserSetup  $userSetup
      * @return \Illuminate\Http\Response
      */
-    public function show(UserSetup $userSetup)
+    public function show()
     {
-        //
+        $userId = Auth::user()->id;
+        $userSetup = UserSetup::where('user_id', $userId)->first();
+
+        return view('user-settings', ['userSetup' => $userSetup]);
     }
 
     /**
@@ -68,9 +74,17 @@ class UserSetupController extends Controller
      * @param  \App\Models\UserSetup  $userSetup
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUserSetupRequest $request, UserSetup $userSetup)
+    public function update(Request $request, UserSetup $userSetup)
     {
-        //
+        //setup
+        $navColorToUpdate = $request->nav_color;
+        $navFontToUpdate = $request->nav_font;
+        $langCodeToUpdate = $request->lang_code;
+
+        //action
+        $userSetup->update(['nav_color'=>$navColorToUpdate, 'nav_font'=>$navFontToUpdate, 'lang_code'=>$langCodeToUpdate]);
+
+        return redirect()->route('settings.show', ['userSetup'=>$userSetup]);
     }
 
     /**

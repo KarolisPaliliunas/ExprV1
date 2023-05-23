@@ -9,10 +9,10 @@
           <a class="nav-link" href="{{ route('ugroups.list') }}">{{ __("messages.groupsMenuItemLabel") }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">{{ __("messages.settingsMenuItemLabel") }}</a>
+          <a class="nav-link" href="{{ route('settings.show') }}">{{ __("messages.settingsMenuItemLabel") }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">{{ __("messages.profileMenuItemLabel") }}</a>
+          <a class="nav-link" href="{{ route('profile.edit') }}">{{ __("messages.profileMenuItemLabel") }}</a>
         </li>
       </ul>
       <ul class="navbar-nav ms-auto">

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+//ADDED
+use App\Models\UserSetup;
 
 class RegisteredUserController extends Controller
 {
@@ -38,12 +40,23 @@ class RegisteredUserController extends Controller
 
         $userType = $this->determineUserType(); // 100 - super admin, 0 - user, 1 - admin
 
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $details = json_decode(file_get_contents("http://ipinfo.io/{$ip}/json"));
+        $defaultCountryCode = 'EN';
+
+        if(!empty($details))
+            if(property_exists($details, 'country'))
+                if($details->country == 'LT')
+                    $defaultCountryCode = 'LT';
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'admin_type' => $userType,
+            'user_type' => $userType,
             'password' => Hash::make($request->password)
         ]);
+
+        $this->createDefaultSetup($user, $defaultCountryCode);
 
         event(new Registered($user));
 
@@ -57,5 +70,14 @@ class RegisteredUserController extends Controller
         if (empty($anyUsers))
             return 100;
         else return 0;
+    }
+
+    private function createDefaultSetup(User $user, String $defaultCountryCode){
+        UserSetup::create([
+            'user_id' => $user->id,
+            'lang_code' => $defaultCountryCode,
+            'nav_color' => 10,
+            'nav_font' => 10
+        ]);
     }
 }
