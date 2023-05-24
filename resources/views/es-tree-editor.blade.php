@@ -3,6 +3,14 @@
     @csrf
     <button type="submit" class="btn btn-outline-danger form-control" style="width:auto; margin-left:90%">{{ __('messages.backToListButtonLabel') }}</button>
   </form>
+  <!-- ERRORS -->
+  @if ($errors->any())
+    @foreach ($errors->all() as $error)
+      <div class="alert alert-danger">
+        <p>{{ $error }}</p>
+      </div>
+    @endforeach
+  @endif
   @isset ($project->id)
   @isset ($projectTree)
   <div class="border border-secondary overflow-auto" style="height:600px; width:100%; margin-top:20px">

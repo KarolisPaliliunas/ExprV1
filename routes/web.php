@@ -35,11 +35,6 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth','verified'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 //Project
 Route::middleware(['auth', 'verified'])->group(function ($project_id = null) { // applies to all route groups
@@ -106,15 +101,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/settings-update/{userSetup}', [UserSetupController::class, 'update'])->name('settings.update');
 });
 
-//Localization
-Route::get('en', function() {
-    session(['locale' => 'en']);
-    return back();
-});
-
-Route::get('lt', function() {
-    session(['locale' => 'lt']);
-    return back();
+//Profile
+Route::middleware(['auth','verified'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 //Auth routes (include)

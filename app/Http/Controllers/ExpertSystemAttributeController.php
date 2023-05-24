@@ -7,6 +7,7 @@ use App\Http\Requests\StoreExpertSystemAttributeRequest;
 use App\Http\Requests\UpdateExpertSystemAttributeRequest;
 use App\Models\ExpertSystemValue;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class ExpertSystemAttributeController extends Controller
 {
@@ -38,6 +39,12 @@ class ExpertSystemAttributeController extends Controller
      */
     public function store(Request $request, $item_id, $project_id, $createForProject = false)
     {
+        //validate
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required|max:255'  
+        ]);
+
         //setup
         if ($createForProject == true){
             $newAttribute = new ExpertSystemAttribute();
@@ -89,6 +96,12 @@ class ExpertSystemAttributeController extends Controller
      */
     public function update(Request $request, $item_id, $project_id)
     {
+        //validate
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required|max:255'  
+        ]);
+
         //setup
         $attributeToUpdate = ExpertSystemAttribute::find($item_id);
 
@@ -108,11 +121,27 @@ class ExpertSystemAttributeController extends Controller
      */
     public function destroy(Request $request, $item_id, $project_id)
     {
-                //setup
-                $attributeToDestroy = ExpertSystemAttribute::find($item_id);
+        //setup
+        $attributeToDestroy = ExpertSystemAttribute::find($item_id);
+        
+        //validate
+        $noRelatedItems = $this->validateNoRelatedItems($attributeToDestroy);
+        if($noRelatedItems == false)
+            throw ValidationException::withMessages(['NoFieldName' => __('messages.hasRelatedItems')]);
 
-                //action
-                $attributeToDestroy->delete();
-                return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
+        //action
+        $attributeToDestroy->delete();
+        return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
+    }
+
+    //validators
+    private function validateNoRelatedItems($expertSystemAttribute){
+        $noRelatedItems = true;
+        $foundValue = ExpertSystemValue::where('es_attribute_id', $expertSystemAttribute->id)->first();
+
+        if(!empty($foundValue))
+            $noRelatedItems = false;
+        
+        return $noRelatedItems;
     }
 }

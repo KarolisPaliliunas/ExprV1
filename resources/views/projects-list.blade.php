@@ -89,6 +89,7 @@
               </td>
               <td>
                 <div class="d-flex flex-row bd-highlight mb-3">
+                  @if ($project->userID == $currentUser->id || $currentUser->user_type > 0)
                   <div class="p-2 bd-highlight">
                     <form method="get" action="{{ route('project.edit', ['project_id'=>$project->id, 'filterType'=>$filterTypeValue, 'filterValue'=>$filterSearchValue]) }}">
                       @csrf
@@ -101,6 +102,7 @@
                       <button type="submit"><i class="bi bi-trash" style="font-size: 30px;"></i></button>
                     </form>
                   </div>
+                  @endif
                   @if($project->is_published == 1)
                   <div class="p-2 bd-highlight">
                     <form method="get" action="{{ route('project.executeNoData', ['project_id'=>$project->id]) }}">
@@ -108,6 +110,7 @@
                       <button type="submit"><i class="bi bi-skip-start-circle" style="font-size: 30px;"></i></button>
                     </form>
                   </div>
+                    @if ($project->userID == $currentUser->id || $currentUser->user_type > 0)
                   <div class="p-2 bd-highlight">
                     <form method="post" action="{{ route('project.unpublish', ['project_id'=>$project->id]) }}">
                       @csrf
@@ -132,7 +135,9 @@
                       <button type="submit"><i class="bi bi-person-x" style="font-size: 30px;"></i></button>
                     </form>
                   </div>
-                    @else
+                      @endif
+                  @else
+                    @if ($project->userID == $currentUser->id || $currentUser->user_type > 0)
                   <div class="p-2 bd-highlight">
                     <form method="get" action="{{ route('project.generateTreeEditor', ['project_id'=>$project->id]) }}">
                       @csrf
@@ -145,6 +150,7 @@
                       <button type="submit"><i class="bi bi-file-plus" style="font-size: 30px;"></i></button>
                     </form>
                   </div>
+                    @endif
                   @endif
                 </div>
               </td>

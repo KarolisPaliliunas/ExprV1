@@ -116,6 +116,25 @@ return [
    'langSettingLabel' => 'Language',
    'settingsUserListButtonlabel' => 'System Users',
 
+   //systemMessages
+   'projectCreateSuccessMessage' => 'Project Created Successfully!',
+   'projectUpdateSuccessMessage' => 'Project Updated Successfully!',
+   'projectHasAssignedUsersMessage' => 'This project can not be deleted. It still has assigned users!',
+   'projectDeleteSuccessMessage' => 'Project Deleted Successfully!',
+   'projectNotFinishedValuesWithNoConclusionMessage' => 'Project is not finished. There are values without conclusion!',
+   'projectPublishSuccessMessage' => 'Project Published Successfully!',
+   'projectUnpublishSuccessMessage' => 'Project Unpublished Successfully!',
+   
+   'groupCreateSuccessMessage' => 'Group Created Successfully!',
+   'groupUpdateSuccessMessage' => 'Group Updated Successfully!',
+   'groupDeleteSuccessMessage' => 'Group Deleted Successfully!',
+   'groupHasUsersMessage' => 'This group can not be deleted. It still has users!',
+   'groupJoinSuccess' => 'Joined Group Successfully!',
+   'groupJoinFailCodeMessage' => 'Group Join Failed. No such group with provided join code!',
+   'userAlreadyInGroup' => 'You are already in this group!',
+
+   'hasRelatedItems' => 'Can not delete. Has related item!',
+
    //aditional
    'navColorBlue' => 'Blue (Standard)',
    'navColorGreen' => 'Green',

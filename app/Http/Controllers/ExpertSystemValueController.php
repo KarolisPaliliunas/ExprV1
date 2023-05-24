@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\ExpertSystemValue;
 use App\Http\Requests\StoreExpertSystemValueRequest;
 use App\Http\Requests\UpdateExpertSystemValueRequest;
+use App\Models\ExpertSystemAttribute;
+use App\Models\ExpertSystemConclusion;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class ExpertSystemValueController extends Controller
 {
@@ -37,6 +40,12 @@ class ExpertSystemValueController extends Controller
      */
     public function store(Request $request, $item_id, $project_id)
     {
+        //validate
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required|max:255'  
+        ]);
+
         //setup
         $newValue = new ExpertSystemValue();
         $newValue->name = $request->name;
@@ -81,6 +90,12 @@ class ExpertSystemValueController extends Controller
      */
     public function update(Request $request, $item_id, $project_id)
     {
+        //validate
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required|max:255'  
+        ]);
+
         //setup
         $valueToUpdate = ExpertSystemValue::find($item_id);
         $nameToUpate = $request->name;
@@ -102,8 +117,26 @@ class ExpertSystemValueController extends Controller
         //setup
         $valueToDestroy = ExpertSystemValue::find($item_id);
 
+        //validation
+        $noRelatedItems = $this->validateNoRelatedItems($valueToDestroy);
+        if($noRelatedItems == false)
+            throw ValidationException::withMessages(['NoFieldName' => __('messages.hasRelatedItems')]);
+
         //action
-        $valueToDestroy->delete();
+        //$valueToDestroy->delete();
         return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
+    }
+
+    //validators
+    private function validateNoRelatedItems($expertSystemValue){
+        $noRelatedItems = true;
+        $foundAttribute = ExpertSystemAttribute::where('es_value_id', $expertSystemValue->id)->first();
+        $foundConclusion = ExpertSystemConclusion::where('es_value_id', $expertSystemValue->id)->first();
+        if(!empty($foundAttribute)){
+            $noRelatedItems = false;
+        } else if(!empty($foundConclusion))
+            $noRelatedItems = false;
+        
+        return $noRelatedItems;
     }
 }

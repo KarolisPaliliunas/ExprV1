@@ -69,7 +69,7 @@ class UserGroupController extends Controller
         //action
         
         $newUserGroupLink->save();
-        return redirect()->route('ugroups.list')->with('groupCreateSuccess', __('GroupCreateSuccess'));
+        return redirect()->route('ugroups.list')->with('groupCreateSuccess', __('messages.groupCreateSuccessMessage'));
     }
 
     /**
@@ -80,15 +80,21 @@ class UserGroupController extends Controller
      */
     public function show()
     {
-        $currentUserID = Auth::user()->id;
+        $currentUser = Auth::user();
+        $currentUserID = $currentUser->id;
 
-        $userGroups = UserGroup::where('user_created_id', '=', $currentUserID)
-            ->where('user_created_id', '!=', -1)
+        $userGroups = UserGroup::whereExists(function ($query) use($currentUserID) {
+                $query->select('user_id')
+                      ->from('user_group_links')
+                      ->whereRaw('user_group_links.user_group_id = user_groups.id')
+                      ->whereRaw('user_group_links.user_id = '.$currentUserID);
+            })
+            ->orWhere('user_created_id', '=', $currentUserID)
             ->join('users', 'user_groups.user_created_id', '=', 'users.id')
-            ->select('user_groups.*', 'users.name AS userName')
+            ->select('user_groups.*', 'users.name AS ownerName', 'users.id AS ownerID')
             ->latest()->paginate(5);
 
-        return view('user-groups', compact('userGroups'))
+        return view('user-groups', ['userGroups' => $userGroups, 'currentUser' => $currentUser])
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -119,7 +125,7 @@ class UserGroupController extends Controller
         $request->validate([
             'name' => 'required|min:3|max:255',
             'description' => 'required',
-            //'group_join_code' => 'required|min:3|max:50|unique:user_groups'    
+            'group_join_code' => 'required|min:3|max:50|unique:user_groups,group_join_code,'.$user_group_id   
         ]);
         
         //setup
@@ -132,7 +138,7 @@ class UserGroupController extends Controller
         //action
         $userGroupToUpdate->update(['name' => $nameToUpate, 'description' => $descriptionToUpate, 'group_join_code' => $groupJoinCodeToUpdate]);
 
-        return redirect()->route('ugroups.list')->with('groupUpdateSuccess', __('GroupUpdateSuccess'));
+        return redirect()->route('ugroups.list')->with('groupUpdateSuccess', __('messages.groupUpdateSuccessMessage'));
     }
 
     /**
@@ -145,7 +151,7 @@ class UserGroupController extends Controller
         //validate
         $noUsers = $this->validateNoUsersinGroup($user_group_id);
         if ($noUsers == false)
-            throw ValidationException::withMessages(['NoFieldName' => __('GroupHasUsers')]);
+            throw ValidationException::withMessages(['NoFieldName' => __('messages.groupHasUsersMessage')]);
 
         //setup
         $userGroupToDestroy = UserGroup::find($user_group_id);
@@ -156,7 +162,7 @@ class UserGroupController extends Controller
         //action
         $userGroupToDestroy->delete();
         $userGroupLinkToDestroy->delete();
-        return redirect()->route('ugroups.list');
+        return redirect()->route('ugroups.list')->with('groupDeleteSuccess', __('messages.groupDeleteSuccessMessage'));
     }
 
     public function userList($user_group_id)
@@ -168,7 +174,7 @@ class UserGroupController extends Controller
 
 
         //action
-        return view('user-group-user-list', ['userGroup' => $userGroup, 'userList' => $userList, 'ownerId' => $ownerId])->with('groupDeleteSuccess', __('GroupDeleteSuccess'));
+        return view('user-group-user-list', ['userGroup' => $userGroup, 'userList' => $userList, 'ownerId' => $ownerId]);
     }
 
     public function joinGroupView(){
@@ -177,38 +183,42 @@ class UserGroupController extends Controller
     }
 
     public function joinGroup(Request $request){
-        //$validate
-        $request->validate([
-            'joinCode' => 'required'    
-        ]);
-        
         //setup
         $userGroup = null;
         $joinCode = $request->joinCode;
+
+        $currentUserID = Auth::user()->id;
 
         $userGroup = UserGroup::select()
         ->where('group_join_code', '=', $joinCode)
         ->first();
 
-        $currentUserID = Auth::user()->id;
+        //validate
+        $request->validate([
+            'joinCode' => 'required'    
+        ]);
 
         //action
         if(!empty($userGroup)){
+
+            $alreadyInGroup = $this->validateUserAlreadyInGroup($userGroup->id, $currentUserID);
+            if ($alreadyInGroup == true)
+                throw ValidationException::withMessages(['NoFieldName' => __('messages.userAlreadyInGroup')]);
+
             $newLink = new UserGroupLink(); 
             $newLink->user_group_id = $userGroup->id;
             $newLink->user_id = $currentUserID;
             $newLink->save();
             
-            return redirect()->route('ugroups.list')->with('groupJoinSuccess', __('GroupJoinSuccess'));
+            return redirect()->route('ugroups.list')->with('groupJoinSuccess', __('messages.groupJoinSuccess'));
         }
         else{
-            throw ValidationException::withMessages(['NoFieldName' => __('GroupJoinFail')]);
+            throw ValidationException::withMessages(['NoFieldName' => __('messages.groupJoinFailCodeMessage')]);
         }
     }
 
     public function removeUserFromGroup($user_group_id, $user_id){
         //setup
-
         $userGroupLink = UserGroupLink::select()->
         where('user_id', $user_id)->
         where('user_group_id', $user_group_id)
@@ -256,6 +266,19 @@ class UserGroupController extends Controller
         if (sizeof($userList)>1) // mainUser
             $noUsers = false;
         return $noUsers;
+    }
+
+    public function validateUserAlreadyInGroup($user_group_id, $user_id){
+        $userInGroup = false;
+
+        $userGroupLink = UserGroupLink::select()->
+        where('user_id', $user_id)->
+        where('user_group_id', $user_group_id)
+        ->first();
+
+        if (!empty($userGroupLink))
+            $userInGroup = true;
+        return $userInGroup;
     }
 
 }

@@ -47,7 +47,7 @@ return [
    'projectDescriptionLabel' => 'Aprašas',
    'projectCreatedByLabel' => 'Sukūrė',
    'projectCreatedDateLabel' => 'Sukūrimo Data',
-   'projectActionsLabel' => 'veiksmai',
+   'projectActionsLabel' => 'Veiksmai',
    'expertSystemProjectLabel' => 'Ekspertinės Sistemos Projektas',
    'filtersSearchButton' => 'Ieškoti',
    'projectNameLabel' => 'Projekto Pavadinimas',

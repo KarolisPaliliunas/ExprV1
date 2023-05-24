@@ -75,7 +75,7 @@ class ExpertSystemProjectController extends Controller
 
         //action
         $newProject->save();
-        return redirect()->route('project.list')->with('projectCreateSuccess', __('ProjectCreateSuccess'));;
+        return redirect()->route('project.list')->with('projectCreateSuccess', __('messages.projectCreateSuccessMessage'));;
     }
 
     /**
@@ -86,57 +86,78 @@ class ExpertSystemProjectController extends Controller
      */
     public function show($filterTypeValue, $filterSearchValue = null){
         //---setup
-        $currentUserID = Auth::user()->id;
+        $currentUser = Auth::user();
+        $currentUserID = $currentUser->id;
         $currentUserGroupID = Auth::user()->group_id;
 
         //---action
         switch ($filterTypeValue){
             case 10:
                 if($filterSearchValue == null){
-                    $projects = ExpertSystemProject::
-                    where('user_created_id', '=', $currentUserID)
+                    $projects = ExpertSystemProject::whereExists(function ($query) use($currentUserID) {
+                        $query->select('user_id')
+                              ->from('user_project_links')
+                              ->whereRaw('user_project_links.es_project_id = expert_system_projects.id')
+                              ->whereRaw('user_project_links.user_id = '.$currentUserID);
+                    })
+                    ->orWhere('user_created_id', '=', $currentUserID)
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
-                    ->select('expert_system_projects.*', 'users.name AS userName')
+                    ->select('expert_system_projects.*', 'users.name AS userName', 'users.id as userID')
                     ->latest()->paginate(5);
 
                     return view('projects-list', compact('projects'))
                     ->with('filterTypeValue', $filterTypeValue)
                     ->with('filterSearchValue', $filterSearchValue)
+                    ->with('currentUser', $currentUser)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 } else {
-                    $projects = ExpertSystemProject::
-                    where('user_created_id', '=', $currentUserID)
-                    ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterSearchValue)."%'")
+                    $projects = ExpertSystemProject::where(function ($query) use($currentUserID, $filterSearchValue) {
+                        $query->whereExists(function ($query) use($currentUserID) {
+                            $query->select('user_id')
+                                  ->from('user_project_links')
+                                  ->whereRaw('user_project_links.es_project_id = expert_system_projects.id')
+                                  ->whereRaw('user_project_links.user_id = '.$currentUserID);
+                    })
+                    ->whereRaw("LOWER(expert_system_projects.name) LIKE '%".strtolower($filterSearchValue)."%'");})
+                    ->orWhere(function ($query) use($currentUserID, $filterSearchValue) {
+                        $query->where('user_created_id', '=', $currentUserID)
+                        ->whereRaw("LOWER(expert_system_projects.name) LIKE '%".strtolower($filterSearchValue)."%'");
+                    })
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
-                    ->select('expert_system_projects.*', 'users.name AS userName')
+                    ->select('expert_system_projects.*', 'users.name AS userName', 'users.id as userID')
                     ->latest()->paginate(5);
 
                     return view('projects-list', compact('projects'))
                     ->with('filterTypeValue', $filterTypeValue)
                     ->with('filterSearchValue', $filterSearchValue)
+                    ->with('currentUser', $currentUser)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 }
             case 20:
                 if($filterSearchValue == null){
                     $projects = ExpertSystemProject::
-                    where('is_published', '=', true)->whereNotNull('is_published')
+                    where('is_published', '=', true)
+                    ->whereNotNull('is_published')
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
-                    ->select('expert_system_projects.*', 'users.name AS userName')
+                    ->select('expert_system_projects.*', 'users.name AS userName', 'users.id AS userID')
                     ->latest()->paginate(5);
                     return view('projects-list', compact('projects'))
                     ->with('filterTypeValue', $filterTypeValue)
                     ->with('filterSearchValue', $filterSearchValue)
+                    ->with('currentUser', $currentUser)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 } else {
                     $projects = ExpertSystemProject::
                     where('is_published', '=', true)->whereNotNull('is_published')
-                    ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterSearchValue)."%'")
+                    ->whereRaw("LOWER(expert_system_projects.name) LIKE '%".strtolower($filterSearchValue)."%'")
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
-                    ->select('expert_system_projects.*', 'users.name AS userName')
+                    ->select('expert_system_projects.*', 'users.name AS userName', 'users.id AS userID')
                     ->latest()->paginate(5);
+
                     return view('projects-list', compact('projects'))
                     ->with('filterTypeValue', $filterTypeValue)
                     ->with('filterSearchValue', $filterSearchValue)
+                    ->with('currentUser', $currentUser)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 }
             case 30:
@@ -145,77 +166,52 @@ class ExpertSystemProjectController extends Controller
                     where('user_project_links.user_id', '=', $currentUserID)
                     ->join('user_project_links', 'user_project_links.es_project_id', '=', 'expert_system_projects.id')
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
-                    ->select('expert_system_projects.*', 'users.name AS userName')
+                    ->select('expert_system_projects.*', 'users.name AS userName', 'users.id AS userID')
                     ->latest()->paginate(5);
+
                     return view('projects-list', compact('projects'))
                     ->with('filterTypeValue', $filterTypeValue)
                     ->with('filterSearchValue', $filterSearchValue)
+                    ->with('currentUser', $currentUser)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 } else {
                     $projects = ExpertSystemProject::
                     where('user_project_links.user_id', '=', $currentUserID)
-                    ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterSearchValue)."%'")
+                    ->whereRaw("LOWER(expert_system_projects.name) LIKE '%".strtolower($filterSearchValue)."%'")
                     ->join('user_project_links', 'user_project_links.es_project_id', '=', 'expert_system_projects.id')
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
-                    ->select('expert_system_projects.*', 'users.name AS userName')
+                    ->select('expert_system_projects.*', 'users.name AS userName', 'users.id AS userID')
                     ->latest()->paginate(5);
+
                     return view('projects-list', compact('projects'))
                     ->with('filterTypeValue', $filterTypeValue)
                     ->with('filterSearchValue', $filterSearchValue)
+                    ->with('currentUser', $currentUser)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 }
             case 40:
-                if($currentUserGroupID != null){
-                    if($filterSearchValue == null){
-                        $projects = ExpertSystemProject::
-                        where('group_project_links.user_group_id', '=', $currentUserID)
-                        ->join('group_project_links', 'group_project_links.es_project_id', '=', 'expert_system_projects.id')
-                        ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
-                        ->select('expert_system_projects.*', 'users.name AS userName')
-                        ->latest()->paginate(5);
-                        return view('projects-list', compact('projects'))
-                        ->with('filterTypeValue', $filterTypeValue)
-                        ->with('filterSearchValue', $filterSearchValue)
-                        ->with('i', (request()->input('page', 1) - 1) * 5);
-                    } else {
-                        $projects = ExpertSystemProject::
-                        where('group_project_links.user_id', '=', $currentUserID)
-                        ->whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterSearchValue)."%'")
-                        ->join('group_project_links', 'group_project_links.es_project_id', '=', 'expert_system_projects.id')
-                        ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
-                        ->select('expert_system_projects.*', 'users.name AS userName')
-                        ->latest()->paginate(5);
-                        return view('projects-list', compact('projects'))
-                        ->with('filterTypeValue', $filterTypeValue)
-                        ->with('filterSearchValue', $filterSearchValue)
-                        ->with('i', (request()->input('page', 1) - 1) * 5);
-                    }
-                } else {
-                    $projects = array();
-                    return view('projects-list', compact('projects'))
-                    ->with('filterTypeValue', $filterTypeValue)
-                    ->with('filterSearchValue', $filterSearchValue)
-                    ->with('i', (request()->input('page', 1) - 1) * 5);
-                }
-            case 50:
                 if($filterSearchValue == null){
                     $projects = ExpertSystemProject::
                     join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
                     ->select('expert_system_projects.*', 'users.name AS userName')
                     ->latest()->paginate(5);
+
                     return view('projects-list', compact('projects'))
                     ->with('filterTypeValue', $filterTypeValue)
                     ->with('filterSearchValue', $filterSearchValue)
+                    ->with('currentUser', $currentUser)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 } else {
                     $projects = ExpertSystemProject::
-                    whereRaw("LOWER('expert_system_projects.name') LIKE '%". strtolower($filterSearchValue)."%'")
+                    whereRaw("LOWER(expert_system_projects.name) LIKE '%".strtolower($filterSearchValue)."%'")
                     ->join('users', 'expert_system_projects.user_created_id', '=', 'users.id')
                     ->select('expert_system_projects.*', 'users.name AS userName')
                     ->latest()->paginate(5);
+
                     return view('projects-list', compact('projects'))
                     ->with('filterTypeValue', $filterTypeValue)
                     ->with('filterSearchValue', $filterSearchValue)
+                    ->with('currentUser', $currentUser)
                     ->with('i', (request()->input('page', 1) - 1) * 5);
                 }
         }
@@ -259,7 +255,7 @@ class ExpertSystemProjectController extends Controller
         //action
         $projectToUpdate->update(['name'=>$nameToUpate, 'description'=>$descriptionToUpate]);
 
-        return redirect()->route('project.list')->with('projectUpdateSuccess', __('ProjectUpdateSuccess'));
+        return redirect()->route('project.list')->with('projectUpdateSuccess', __('messages.projectUpdateSuccessMessage'));
     }
 
     /**
@@ -272,7 +268,7 @@ class ExpertSystemProjectController extends Controller
         //validate
         $noUsers = $this->validateNoUsersAssignedToProject($project_id);
         if($noUsers == false)
-            throw ValidationException::withMessages(['NoFieldName' => __('ProjectHasAssignedUsers')]);
+            throw ValidationException::withMessages(['NoFieldName' => __('messages.projectHasAssignedUsersMessage')]);
 
         //setup
         $projectToDestroy = ExpertSystemProject::find($project_id);
@@ -280,7 +276,7 @@ class ExpertSystemProjectController extends Controller
         //action
         $this->deleteAllItemsInProject($project_id);
         $projectToDestroy->delete();
-        return redirect()->route('project.list')->with('projectDeleteSuccess', __('ProjectDeleteSuccess'));
+        return redirect()->route('project.list')->with('projectDeleteSuccess', __('messages.projectDeleteSuccessMessage'));
     }
 
     public function execute($project_id, $currentAttributeId = null, $pickedValueId = null){
@@ -356,7 +352,7 @@ class ExpertSystemProjectController extends Controller
         $allValuesHaveConclusion = $this->validateAllValuesHaveConclusion($project_id);
 
         if ($allValuesHaveConclusion == false)
-            throw ValidationException::withMessages(['NoFieldName' => __('ProjectNotFinishedValuesWithNoConclusion')]);
+            throw ValidationException::withMessages(['NoFieldName' => __('messages.projectNotFinishedValuesWithNoConclusionMessage')]);
 
         //setup
         $projectToUpdate = ExpertSystemProject::find($project_id);
@@ -364,7 +360,7 @@ class ExpertSystemProjectController extends Controller
         //action
         $projectToUpdate->update(['is_published'=>true]);
         
-        return redirect()->route('project.list')->with('projectPublishSuccess', __('ProjectPublishSuccess'));
+        return redirect()->route('project.list')->with('projectPublishSuccess', __('messages.projectPublishSuccessMessage'));
     }
 
     public function unpublishProject($project_id){
@@ -384,7 +380,7 @@ class ExpertSystemProjectController extends Controller
 
         $projectToUpdate->update(['is_published'=>false]);
         
-        return redirect()->route('project.list')->with('projectUnpublishSuccess', __('ProjectUnpublishSuccess'));
+        return redirect()->route('project.list')->with('projectUnpublishSuccess', __('messages.projectUnpublishSuccessMessage'));
     }
     
     public function assignUsersList($project_id){
@@ -428,8 +424,11 @@ class ExpertSystemProjectController extends Controller
     }
 
     public function assignUsers(Request $request){
-        //setup
+        //validate
+        if(empty($request->selectedUsersIdsList))
+            return redirect()->back();
 
+        //setup
         $receivedProject_id = $request->project_id;
         $userIdsList = $request->selectedUsersIdsList;
         
@@ -442,8 +441,11 @@ class ExpertSystemProjectController extends Controller
     }
 
     public function unassignUsers(Request $request){
-        //setup
+        //validate
+        if(empty($request->selectedUsersIdsList))
+            return redirect()->back();
 
+        //setup
         $receivedProject_id = $request->project_id;
         $userIdsList = $request->selectedUsersIdsList;
         
@@ -456,6 +458,10 @@ class ExpertSystemProjectController extends Controller
     }
 
     public function assignGroups(Request $request){
+        //validate
+        if(empty($request->selectedGroupsIdsList))
+            return redirect()->back();
+
         //setup
         $receivedProject_id = $request->project_id;
         $groupsIdsList = $request->selectedGroupsIdsList;
@@ -810,8 +816,8 @@ class ExpertSystemProjectController extends Controller
                     $currentItemId = $keyValue;
                 if($key == 'type' && $keyValue == 20){ // if value
                     $conclusion = $this->getConclusion($currentItemId);
-                    $value = $this->getAttributeByValue($currentItemId); // NOT ENOUGH
-                    if(empty($conclusion) && empty($value)) // NOT ENOUGH (jei bus tik 1 attr ano value ir anuo attr.)
+                    $value = $this->getAttributeByValue($currentItemId);
+                    if(empty($conclusion) && empty($value)) 
                         $counter++;
                 }
                 if($key == 'type' && $keyValue == 10){ // if attribute

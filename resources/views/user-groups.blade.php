@@ -71,10 +71,11 @@
                 <p class="fw-normal mb-1">{{ $userGroup->description }}</p>
               </td>
               <td>
-                <p class="fw-normal mb-1">{{ $userGroup->userName }}</p>
+                <p class="fw-normal mb-1">{{ $userGroup->ownerName }}</p>
               </td>
               <td>
                 <div class="d-flex flex-row bd-highlight mb-3">
+                @if ($userGroup->ownerID == $currentUser->id || $currentUser->user_type > 0)
                   <div class="p-2 bd-highlight">
                     <form method="get" action="{{ route('ugroups.edit', ['user_group_id'=>$userGroup->id]) }}">
                       @csrf
@@ -91,6 +92,13 @@
                     <form method="get" action="{{ route('ugroups.userList', ['user_group_id'=>$userGroup->id]) }}">
                       @csrf
                       <button type="submit"><i class="bi bi-person-x" style="font-size: 30px;"></i></button>
+                    </form>
+                  </div>
+                @endif
+                  <div class="p-2 bd-highlight">
+                    <form method="get" action="#">
+                      @csrf
+                      <button type="submit"><i class="bi bi-person-dash-fill" style="font-size: 30px;"></i></button>
                     </form>
                   </div>
                 </div>

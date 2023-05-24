@@ -37,17 +37,22 @@ class ExpertSystemConclusionController extends Controller
      */
     public function store(Request $request, $item_id, $project_id)
     {
-                //setup
-                $newConclusion = new ExpertSystemConclusion();
-                $newConclusion->name = $request->name;
-                $newConclusion->description = $request->description;
-                $newConclusion->es_value_id = $item_id;
-                $newConclusion->type = 30;
+        //validate
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required|max:255'  
+        ]);
+
+        //setup
+        $newConclusion = new ExpertSystemConclusion();
+        $newConclusion->name = $request->name;
+        $newConclusion->description = $request->description;
+        $newConclusion->es_value_id = $item_id;
+        $newConclusion->type = 30;
         
-        
-                //action
-                $newConclusion->save();
-                return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
+        //action
+        $newConclusion->save();
+        return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
     }
 
     /**
@@ -81,6 +86,12 @@ class ExpertSystemConclusionController extends Controller
      */
     public function update(Request $request, $item_id, $project_id)
     {
+        //validate
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required|max:255'  
+        ]);
+        
         //setup
         $conclusionToUpdate = ExpertSystemConclusion::find($item_id);
         $nameToUpate = $request->name;
