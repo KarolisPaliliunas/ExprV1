@@ -96,7 +96,7 @@
                   </div>
                 @endif
                   <div class="p-2 bd-highlight">
-                    <form method="get" action="#">
+                    <form method="post" action="{{ route('ugroups.leaveUser', ['user_group_id'=>$userGroup->id, 'user_id'=>$currentUser->id]) }}">
                       @csrf
                       <button type="submit"><i class="bi bi-person-dash-fill" style="font-size: 30px;"></i></button>
                     </form>

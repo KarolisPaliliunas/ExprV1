@@ -93,6 +93,7 @@ Route::middleware(['auth', 'verified'])->group(function ($project_id = null) {
     Route::post('/user-group-join/create-link', [UserGroupController::class, 'joinGroup'])->name('ugroups.joinGroup');
     Route::get('/user-group-join', [UserGroupController::class, 'joinGroupView'])->name('ugroups.joinGroupView');
     Route::post('/user-group/{user_group_id}/remove-user/{user_id}', [UserGroupController::class, 'removeUserFromGroup'])->name('ugroups.removeUser');
+    Route::post('/user-group/{user_group_id}/leave-user/{user_id}', [UserGroupController::class, 'leaveUserFromGroup'])->name('ugroups.leaveUser');
 });
 
 //Settings

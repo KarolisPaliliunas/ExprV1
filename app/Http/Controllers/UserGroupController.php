@@ -229,6 +229,18 @@ class UserGroupController extends Controller
         return redirect()->route('ugroups.userList', ['user_group_id' => $user_group_id]);
     }
 
+    public function leaveUserFromGroup($user_group_id, $user_id){
+        //setup
+        $userGroupLink = UserGroupLink::select()->
+        where('user_id', $user_id)->
+        where('user_group_id', $user_group_id)
+        ->first();
+
+        //action
+        $userGroupLink->delete();
+        return redirect()->route('ugroups.list');
+    }
+
     //Additional funcs
     private function getUsersByGroup($user_group_id){
         
