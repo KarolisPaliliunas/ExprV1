@@ -65,11 +65,6 @@
                     <label class="form-label" for="joinCodeInput">{{__("messages.groupJoinCodeLabel")}}</label>
                 </div>
 
-                <!-- Reneration Button -->
-                <div class="form-check d-flex justify-content-center mb-4">
-                    <input type="button" value="{{ __('messages.generateJoinCodeButtonLabel') }}" onclick="generateGroupCode();" />
-                </div>
-
                 <!-- Submit button -->
                 <button type="submit" class="btn btn-outline-success form-control">{{__("messages.createButtonLabel")}}</button>
             </form>
