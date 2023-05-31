@@ -123,7 +123,7 @@ class ExpertSystemValueController extends Controller
             throw ValidationException::withMessages(['NoFieldName' => __('messages.hasRelatedItems')]);
 
         //action
-        //$valueToDestroy->delete();
+        $valueToDestroy->delete();
         return redirect()->route('project.generateTreeEditor', ['project_id' => $project_id]);
     }
 

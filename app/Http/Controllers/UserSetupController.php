@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UserSetup;
 use App\Http\Requests\StoreUserSetupRequest;
 use App\Http\Requests\UpdateUserSetupRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 //ADDED
 use Illuminate\Support\Facades\Auth;
@@ -50,10 +51,10 @@ class UserSetupController extends Controller
      */
     public function show()
     {
-        $userId = Auth::user()->id;
-        $userSetup = UserSetup::where('user_id', $userId)->first();
+        $user = Auth::user();
+        $userSetup = UserSetup::where('user_id', $user->id)->first();
 
-        return view('user-settings', ['userSetup' => $userSetup]);
+        return view('user-settings', ['userSetup' => $userSetup, 'currentUser'=>$user]);
     }
 
     /**
@@ -96,5 +97,19 @@ class UserSetupController extends Controller
     public function destroy(UserSetup $userSetup)
     {
         //
+    }
+
+    public function userTypeList(){
+        //setup
+        $userList = User::all();
+
+        //action
+        return view('user-type-list', ['userList' => $userList]);
+    }
+
+    public function changeUserType(User $user, $userType){
+        //action
+        $user->update(['user_type'=>$userType]);
+        return redirect()->route('settings.userTypeList');
     }
 }

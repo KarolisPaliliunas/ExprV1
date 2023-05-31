@@ -115,6 +115,11 @@ return [
    'navigationFontSettingLabel' => 'Navigation Font',
    'langSettingLabel' => 'Language',
    'settingsUserListButtonlabel' => 'System Users',
+   'userSuperAdminLabel' => 'Super Admin',
+   'userAdminLabel' => 'Admin',
+   'userSimpleLabel' => 'Simple User',
+   'makeUserAdminLabel' => 'Make Admin',
+   'makeUserSimpleLabel' => 'Make Simple User',
 
    //systemMessages
    'projectCreateSuccessMessage' => 'Project Created Successfully!',
@@ -132,7 +137,6 @@ return [
    'groupJoinSuccess' => 'Joined Group Successfully!',
    'groupJoinFailCodeMessage' => 'Group Join Failed. No such group with provided join code!',
    'userAlreadyInGroup' => 'You are already in this group!',
-
    'hasRelatedItems' => 'Can not delete. Has related item!',
 
    //aditional

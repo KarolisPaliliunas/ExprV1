@@ -100,6 +100,8 @@ Route::middleware(['auth', 'verified'])->group(function ($project_id = null) {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/settings', [UserSetupController::class, 'show'])->name('settings.show');
     Route::post('/settings-update/{userSetup}', [UserSetupController::class, 'update'])->name('settings.update');
+    Route::get('/user-type-list', [UserSetupController::class, 'userTypeList'])->name('settings.userTypeList');
+    Route::post('/user-type-change/{user}/type/{userType}', [UserSetupController::class, 'changeUserType'])->name('settings.changeUserType');
 });
 
 //Profile

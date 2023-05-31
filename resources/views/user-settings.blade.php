@@ -67,10 +67,12 @@
                                 </div>
                             </div>
                         </form>
-                        <form>
+                        @if ($currentUser->user_type > 0)
+                        <form method="get" action="{{ route('settings.userTypeList') }}">
                             @csrf
                             <button type="submit" class="btn btn-outline-primary mt-4">{{ __('messages.settingsUserListButtonlabel') }}</button>
                         </form>
+                        @endif
                     </section>
                 </div>
             </div>

@@ -115,6 +115,29 @@ return [
    'navigationFontSettingLabel' => 'Navigacijos Šriftas',
    'langSettingLabel' => 'Kalba',
    'settingsUserListButtonlabel' => 'Sistemos Vartotojai',
+   'userSuperAdminLabel' => 'Super Administratorius',
+   'userAdminLabel' => 'Administratorius',
+   'userSimpleLabel' => 'Paprastas Vartotojas',
+   'makeUserAdminLabel' => 'Paversti Administratoriumi',
+   'makeUserSimpleLabel' => 'Paversti Paprastu',
+
+    //systemMessages
+    'projectCreateSuccessMessage' => 'Projektas Sukurtas Sėkmingai!',
+    'projectUpdateSuccessMessage' => 'Projektas Atnaujintas Sėkmingai!',
+    'projectHasAssignedUsersMessage' => 'Šis projektas negali būti ištrintas. Vis dar yra prijungtų vartotojų!',
+    'projectDeleteSuccessMessage' => 'Projektas Ištrinras Sėkmingai!',
+    'projectNotFinishedValuesWithNoConclusionMessage' => 'Projektas nebaigtas. Yra verčių kurios neturi išvados!',
+    'projectPublishSuccessMessage' => 'Projektas Publikuotas Sėkmingai!',
+    'projectUnpublishSuccessMessage' => 'Projekto Publikata Atšaukta Sėkmingai!',
+    
+    'groupCreateSuccessMessage' => 'Grupė Sukurta Sėkmingai!',
+    'groupUpdateSuccessMessage' => 'Grupė Atnaujinta Sėkmingai!',
+    'groupDeleteSuccessMessage' => 'Grupė Ištrinta Sėkmingai!',
+    'groupHasUsersMessage' => 'Grupė negali būti ištrinta. Vis dar yra vartotojų!',
+    'groupJoinSuccess' => 'Prisijungta Sėkmingai!',
+    'groupJoinFailCodeMessage' => 'Prisijungti nepavyko. Nėra grupės su tokiu prisijungimo kodu!',
+    'userAlreadyInGroup' => 'Jūs jau esate šioje grupėje!',
+    'hasRelatedItems' => 'Negalima ištrinti yra susįjes įrašas!',
 
     //additional
    'navColorBlue' => 'Mėlyna (Standartinė)',
