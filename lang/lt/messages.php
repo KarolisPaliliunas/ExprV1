@@ -3,12 +3,15 @@ return [
     //login/logout
     'loginButtonLabel' => 'Prisijungti',
     'logoutButtonLabel' => 'Atsijungti',
+    'loggedInLabel' => "Jūs esate prisijungę!",
+
     //menu items
    'dashboardMenuItemLabel' => 'Valdymo Skydelis',
    'projectsMenuItemLabel' => 'Projektai',
    'groupsMenuItemLabel' => 'Grupės',
    'settingsMenuItemLabel' => 'Nustatymai',
    'profileMenuItemLabel' => 'Profilis',
+
    //default buttons
    'newButtonLabel' => 'Nauja',
    'saveButtonLabel' => 'Saugoti',

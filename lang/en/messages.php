@@ -3,12 +3,15 @@ return [
     //login/logout
     'loginButtonLabel' => 'Login',
     'logoutButtonLabel' => 'Logout',
+    'loggedInLabel' => "You're logged in!",
+
     //menu items
    'dashboardMenuItemLabel' => 'Dashboard',
    'projectsMenuItemLabel' => 'Projects',
    'groupsMenuItemLabel' => 'Groups',
    'settingsMenuItemLabel' => 'Settings',
    'profileMenuItemLabel' => 'Profile',
+   
    //default buttons
    'newButtonLabel' => 'New',
    'saveButtonLabel' => 'Save',
