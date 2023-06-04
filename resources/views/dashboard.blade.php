@@ -13,5 +13,11 @@
                 </div>
             </div>
         </div>
+        <div class="list-group">
+            <a href="{{ route('project.list') }}" class="list-group-item list-group-item-action h1" style="margin-left:5%">{{ __("messages.projectsMenuItemLabel") }}</a>
+            <a href="{{ route('ugroups.list') }}" class="list-group-item list-group-item-action h1" style="margin-left:5%">{{ __("messages.groupsMenuItemLabel") }}</a>
+            <a href="{{ route('settings.show') }}" class="list-group-item list-group-item-action h1" style="margin-left:5%">{{ __("messages.settingsMenuItemLabel") }}</a>
+            <a href="{{ route('profile.edit') }}" class="list-group-item list-group-item-action h1" style="margin-left:5%">{{ __("messages.profileMenuItemLabel") }}</a>
+        </div>
     </div>
 </x-app-layout>
