@@ -81,6 +81,8 @@ return [
    'currentlyExecutingLabel' => 'Currently executing project: ',
    'conclusionReachedlabel' => 'You have reached a conclusion: ',
    'tryAgainButtonlabel' => 'Try Again!',
+   'projectNotPublished' => 'The project is not published!',
+   'projectNotAssigned' => 'You are not assigned to this project!',
 
    //groups
    'groupsLabel' => 'Group List',
@@ -146,7 +148,7 @@ return [
    'navColorBlue' => 'Blue (Standard)',
    'navColorGreen' => 'Green',
    'navColorRed' => 'Red',
-   'navColorBrown' => 'Brown',
+   'navColorBlack' => 'Black',
 
    'navFontArial' => 'Arial (Standard)',
    'navFontTNR' => 'Times New Roman',

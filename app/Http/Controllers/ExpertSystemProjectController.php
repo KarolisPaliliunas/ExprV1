@@ -281,14 +281,21 @@ class ExpertSystemProjectController extends Controller
 
     public function execute($project_id, $currentAttributeId = null, $pickedValueId = null){
         //setup
-        //if (!empty($currentAttributeId)){
-         //   dd("HERE: ".$project_id."  ATTTR: ".$currentAttributeId);
-        //}
+        $currentUser = Auth::user();
         $projectToExcecute = ExpertSystemProject::find($project_id);
         $newAttribute = null;
         $valuesList = null;
         $setConclusion = null;
 
+        //validate
+        if ($projectToExcecute->is_published == false)
+            throw ValidationException::withMessages(['NoFieldName' => __('messages.projectNotPublished')]);
+        
+        $canUserExecute = $this->validateUserAssignedOrOwner($projectToExcecute, $currentUser);
+        if ($canUserExecute == false)
+            throw ValidationException::withMessages(['NoFieldName' => __('messages.projectNotAssigned')]);
+
+        //setup
         if(empty($currentAttributeId)) {
             $newAttribute = $this->getAttributeByProject($project_id);
             $valuesList = $this->getValues($newAttribute['id']);
@@ -301,7 +308,6 @@ class ExpertSystemProjectController extends Controller
         }
 
         //action
-        //return redirect()->route('project.execute', ['project_id'=>$project_id, 'currentAttribute'=>$newAttribute['id'], 'valuesList'=>$valuesList, 'conclusion'=>$setConclusion]);
         return view('es-tree-executor', ['project'=>$projectToExcecute, 'attribute'=>$newAttribute, 'values'=>$valuesList, 'conclusion'=>$setConclusion]);
     }
 
@@ -841,6 +847,22 @@ class ExpertSystemProjectController extends Controller
             $noUsers = false;
 
         return $noUsers;  
+    }
+
+    private function validateUserAssignedOrOwner($project, $user){
+        //setup
+        $canUserExecute = true;
+
+        $userProjectLink = UserProjectLink::where('user_id', $user->id)
+        ->where('es_project_id', $project->id)
+        ->first();
+
+        if($project->user_created_id != $user->id){
+            if(empty($userProjectLink))
+                $canUserExecute = false;
+        }
+
+        return $canUserExecute;
     }
     //endCustomvalidators
 

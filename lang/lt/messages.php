@@ -81,6 +81,8 @@ return [
    'currentlyExecutingLabel' => 'Dabar Vykdote Projektą: ',
    'conclusionReachedlabel' => 'Jūs pasekėtė išvadą. Gauta išvada: ',
    'tryAgainButtonlabel' => 'Bandyti Vėl!',
+   'projectNotPublished' => 'Projektas nėra publikuotas!',
+   'projectNotAssigned' => 'Jūs nesate priskirtas šiam projektui!',
 
    //groups
    'groupsLabel' => 'Grupių Sąrašas',
@@ -146,7 +148,7 @@ return [
    'navColorBlue' => 'Mėlyna (Standartinė)',
    'navColorGreen' => 'Žalia',
    'navColorRed' => 'Raudona',
-   'navColorBrown' => 'Ruda',
+   'navColorBlack' => 'Juoda',
 
    'navFontArial' => 'Arial (Standartinis)',
    'navFontTNR' => 'Times New Roman',

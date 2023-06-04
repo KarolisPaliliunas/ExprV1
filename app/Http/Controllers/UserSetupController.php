@@ -112,4 +112,13 @@ class UserSetupController extends Controller
         $user->update(['user_type'=>$userType]);
         return redirect()->route('settings.userTypeList');
     }
+
+    public static function getSetupForCurrentUser(){
+        //setup
+        $currentUser = Auth::user();
+        $userSetup = UserSetup::where('user_id', $currentUser->id)->first();
+
+        //action
+        return $userSetup;
+    }
 }
