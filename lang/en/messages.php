@@ -163,5 +163,6 @@ return [
 
    'langEnglish' => 'English',
    'langLithuanian' => 'Lithuanian',
+   'langGerman' => 'German',
 ]
 ?>
