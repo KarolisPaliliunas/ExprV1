@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UserSetup;
 use App\Http\Requests\StoreUserSetupRequest;
 use App\Http\Requests\UpdateUserSetupRequest;
+use App\Models\ProjectCompletionStatistic;
 use App\Models\User;
 use Illuminate\Http\Request;
 //ADDED
@@ -120,5 +121,19 @@ class UserSetupController extends Controller
 
         //action
         return $userSetup;
+    }
+
+    public static function showStatistics($user_id){
+        //setup
+        $userStatisticsList = ProjectCompletionStatistic::select('project_completion_statistics.*', 'expert_system_projects.name as projectName')
+        ->where('user_id', $user_id)
+        ->join('expert_system_projects', 'project_completion_statistics.es_project_id', '=', 'expert_system_projects.id')
+        ->get();
+        
+        //action
+        if (empty($userStatisticsList->first()))
+            $userStatisticsList = null;
+
+        return view('user-statistics-list', ['userStatisticsList'=>$userStatisticsList]);
     }
 }

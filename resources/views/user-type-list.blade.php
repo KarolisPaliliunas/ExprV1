@@ -24,13 +24,22 @@
                         <td>{{ $user->name }}</td>
                         @if ($user->user_type == 100)
                         <td>{{ __('messages.userSuperAdminLabel') }}</td>
-                        <td></td>
+                        <td>
+                            <form method="get" action="{{ route('settings.userStatistics', ['user' => $user->id]) }}">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-success ms-1">{{ __('messages.userStatisticsButtonLabel') }}</button>
+                            </form>
+                        </td>
                         @elseif ($user->user_type == 1)
                         <td>{{ __('messages.userAdminLabel') }}</td>
                         <td>
                             <form method="post" action="{{ route('settings.changeUserType', ['user' => $user, 'userType' => 0]) }}">
                                 @csrf
                                 <button type="submit" class="btn btn-outline-info ms-1">{{ __('messages.makeUserSimpleLabel') }}</button>
+                            </form>
+                            <form method="get" action="{{ route('settings.userStatistics', ['user' => $user->id]) }}">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-success ms-1 mt-2">{{ __('messages.userStatisticsButtonLabel') }}</button>
                             </form>
                         </td>
                         @else
@@ -39,6 +48,10 @@
                             <form method="post" action="{{ route('settings.changeUserType', ['user' => $user, 'userType' => 1]) }}">
                                 @csrf
                                 <button type="submit" class="btn btn-outline-info ms-1">{{ __('messages.makeUserAdminLabel') }}</button>
+                            </form>
+                            <form method="get" action="{{ route('settings.userStatistics', ['user' => $user->id]) }}">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-success ms-1 mt-2">{{ __('messages.userStatisticsButtonLabel') }}</button>
                             </form>
                         </td>
                         @endif

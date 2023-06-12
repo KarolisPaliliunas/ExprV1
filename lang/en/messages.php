@@ -11,7 +11,7 @@ return [
    'groupsMenuItemLabel' => 'Groups',
    'settingsMenuItemLabel' => 'Settings',
    'profileMenuItemLabel' => 'Profile',
-   
+
    //default buttons
    'newButtonLabel' => 'New',
    'saveButtonLabel' => 'Save',
@@ -20,6 +20,8 @@ return [
    'createButtonLabel' => 'Create',
    'cancelButtonLabel' => 'Cancel',
    'backToListButtonLabel' => 'Back To List',
+   'yesLabel' => 'Yes',
+   'noLabel' => 'No',
 
     //authentication
     'usernameLabel' => 'Name',
@@ -125,6 +127,11 @@ return [
    'userSimpleLabel' => 'Simple User',
    'makeUserAdminLabel' => 'Make Admin',
    'makeUserSimpleLabel' => 'Make Simple User',
+   'userStatisticsButtonLabel' => 'User Statistics',
+   'finalConlusionlabel' => 'Final Conlcusion',
+   'isClosedLabel' => 'Closed',
+   'completionPathLabel' => 'Completion Path',
+   'noStatisticsForUser' => 'User does not have any statistics yet!',
 
    //systemMessages
    'projectCreateSuccessMessage' => 'Project Created Successfully!',

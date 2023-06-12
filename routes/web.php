@@ -56,7 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function ($project_id = null) { /
     Route::post('/unassign-users', [ExpertSystemProjectController::class, 'unassignUsers'])->name('project.unassignSelectedUsers');
     
     //excecution
-    Route::get('/projects-execute/{project_id}/current-attr/{currentAttributeId}/picked-val/{pickedValueId}', [ExpertSystemProjectController::class, 'execute'])->name('project.execute');
+    Route::get('/projects-execute/{project_id}/current-attr/{currentAttributeId}/picked-val/{pickedValueId}/{openStatisticId}', [ExpertSystemProjectController::class, 'execute'])->name('project.execute');
     Route::get('/projects-execute/{project_id}', [ExpertSystemProjectController::class, 'execute'])->name('project.executeNoData');
 });
 
@@ -102,6 +102,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/settings-update/{userSetup}', [UserSetupController::class, 'update'])->name('settings.update');
     Route::get('/user-type-list', [UserSetupController::class, 'userTypeList'])->name('settings.userTypeList');
     Route::post('/user-type-change/{user}/type/{userType}', [UserSetupController::class, 'changeUserType'])->name('settings.changeUserType');
+    Route::get('/user-statistics/{user}', [UserSetupController::class, 'showStatistics'])->name('settings.userStatistics');
 });
 
 //Profile

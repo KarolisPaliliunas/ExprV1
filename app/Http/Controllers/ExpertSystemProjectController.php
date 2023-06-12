@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ExpertSystemAttribute;
 use App\Models\ExpertSystemValue;
 use App\Models\ExpertSystemConclusion;
+use App\Models\ProjectCompletionStatistic;
 use App\Models\User;
 use App\Models\UserGroup;
 use App\Models\UserProjectLink;
@@ -279,13 +280,15 @@ class ExpertSystemProjectController extends Controller
         return redirect()->route('project.list')->with('projectDeleteSuccess', __('messages.projectDeleteSuccessMessage'));
     }
 
-    public function execute($project_id, $currentAttributeId = null, $pickedValueId = null){
+    public function execute($project_id, $currentAttributeId = null, $pickedValueId = null, $openStatisticId = null){
         //setup
         $currentUser = Auth::user();
         $projectToExcecute = ExpertSystemProject::find($project_id);
         $newAttribute = null;
         $valuesList = null;
         $setConclusion = null;
+        $statisticIdToPass = null;
+        $pickedExpertSystemValue = ExpertSystemValue::find($pickedValueId);
 
         //validate
         if ($projectToExcecute->is_published == false)
@@ -306,9 +309,35 @@ class ExpertSystemProjectController extends Controller
                     $valuesList = $this->getValues($newAttribute['id']);
                 }
         }
-
+        //dd('$project_id = '.$project_id.', $currentAttributeId = '.$currentAttributeId.', $pickedValueId = '.$pickedValueId.', $openStatistic = '.$openStatistic);
         //action
-        return view('es-tree-executor', ['project'=>$projectToExcecute, 'attribute'=>$newAttribute, 'values'=>$valuesList, 'conclusion'=>$setConclusion]);
+        if(!empty($openStatisticId)){
+            $openStatistic = ProjectCompletionStatistic::find($openStatisticId);
+            if(!empty($setConclusion)){
+                $pathToUpdate = $openStatistic->completion_path;
+                $pathToUpdate = $pathToUpdate." -> ".$pickedExpertSystemValue->name;
+                $pathToUpdate = $pathToUpdate." -> ".$setConclusion['name']; 
+                $openStatistic->update(['closed'=>true, 'completion_path'=>$pathToUpdate, 'final_conclusion'=>$setConclusion['name']]);
+                $statisticIdToPass = $openStatistic->id;
+            } else {
+                $pathToUpdate = $openStatistic->completion_path;
+                $pathToUpdate = $pathToUpdate." -> ".$pickedExpertSystemValue->name; 
+                $openStatistic->update(['completion_path'=>$pathToUpdate]);
+                $statisticIdToPass = $openStatistic->id;
+            }
+        } else{
+            $newProjectCompletionStatistic = new ProjectCompletionStatistic();
+            $newProjectCompletionStatistic->es_project_id = $project_id;
+            $newProjectCompletionStatistic->user_id = $currentUser->id;
+            $newProjectCompletionStatistic->closed = false;
+            $newProjectCompletionStatistic->completion_path = "";
+            $newProjectCompletionStatistic->final_conclusion = "";
+            $newProjectCompletionStatistic->save();
+
+            $statisticIdToPass = $newProjectCompletionStatistic->id;
+        }
+
+        return view('es-tree-executor', ['project'=>$projectToExcecute, 'attribute'=>$newAttribute, 'values'=>$valuesList, 'conclusion'=>$setConclusion, 'openStatisticId'=>$statisticIdToPass]);
     }
 
     public function buildExpertSystemTree($project_id){

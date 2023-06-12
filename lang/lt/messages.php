@@ -20,6 +20,8 @@ return [
    'createButtonLabel' => 'Kurti',
    'cancelButtonLabel' => 'Atšaukti',
    'backToListButtonLabel' => 'Atgal į sąrašą',
+   'yesLabel' => 'Taip',
+   'noLabel' => 'Ne',
 
     //authentication
     'usernameLabel' => 'Vardas',
@@ -125,6 +127,11 @@ return [
    'userSimpleLabel' => 'Paprastas Vartotojas',
    'makeUserAdminLabel' => 'Paversti Administratoriumi',
    'makeUserSimpleLabel' => 'Paversti Paprastu',
+   'userStatisticsButtonLabel' => 'Vartotojo Statistika',
+   'finalConlusionlabel' => 'Paskurtinė Išvada',
+   'isClosedLabel' => 'Uždaryta',
+   'completionPathLabel' => 'Vykdymo Kelias',
+   'noStatisticsForUser' => 'Vartotojas dar neturi jokios statistikos!',
 
     //systemMessages
     'projectCreateSuccessMessage' => 'Projektas Sukurtas Sėkmingai!',

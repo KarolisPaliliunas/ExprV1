@@ -14,7 +14,7 @@
         
         <div class="d-grid gap-2 mt-5 ml-3">
         @foreach ($values as $value)
-            <form method="get" action ="{{ route('project.execute', ['project_id' => $project->id, 'currentAttributeId' => $attribute['id'], 'pickedValueId' => $value['id']]) }}">
+            <form method="get" action ="{{ route('project.execute', ['project_id' => $project->id, 'currentAttributeId' => $attribute['id'], 'pickedValueId' => $value['id'], 'openStatisticId' => $openStatisticId]) }}">
             @csrf
                 <button class="btn btn-outline-primary btn-lg" type="submit">{{ $value['description'] }}</button>
             </form>
